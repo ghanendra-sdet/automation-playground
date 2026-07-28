@@ -1,0 +1,1344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Automation Playground</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="app-layout">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="header-content">
+        <a href="./" class="brand-link">
+          <img src="/logo.svg" alt="Automation Playground" class="brand-logo" width="32" height="32">
+          Automation Playground
+        </a>
+        <div class="header-actions">
+          <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle theme">
+            <span class="sun-icon">☀️</span>
+            <span class="moon-icon">🌙</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="main-container">
+      <!-- Sticky Sidebar Navigation -->
+      <aside class="sidebar" aria-label="Challenges navigation">
+        <div class="sidebar-header">
+          <h2>Sections</h2>
+        </div>
+        <nav class="sidebar-nav">
+          <ul id="sidebar-list">
+            <!-- Dynamically populated via JS to keep index.html clean and maintainable -->
+          </ul>
+        </nav>
+      </aside>
+
+      <!-- Main Challenge Stream -->
+      <main class="content-area">
+        <div class="sections-container" id="sections-container">
+
+          <!-- Section 1 — Basic Form Elements -->
+          <section id="section-1" class="challenge-card" data-testid="section-1">
+            <div class="card-header">
+              <span class="section-number">01</span>
+              <h2>Basic Form Elements</h2>
+            </div>
+            <p class="card-desc">Practise filling text, password, email, phone inputs and a textarea, then submitting and resetting a real form.</p>
+            <div class="playground">
+              <form id="basic-form" novalidate>
+                <div class="form-group">
+                  <label for="form-name">Full Name</label>
+                  <input type="text" id="form-name" name="name" class="form-control" data-testid="form-name" aria-label="First Name" placeholder="Enter name" required>
+                </div>
+                <div class="form-group">
+                  <label for="form-email">Email Address</label>
+                  <input type="email" id="form-email" name="email" class="form-control" data-testid="form-email" aria-label="Email" placeholder="Enter email" required>
+                </div>
+                <div class="form-group">
+                  <label for="form-password">Password</label>
+                  <input type="password" id="form-password" name="password" class="form-control" data-testid="form-password" aria-label="Password" placeholder="Enter password" required>
+                </div>
+                <div class="form-group">
+                  <label for="form-phone">Phone Number</label>
+                  <input type="tel" id="form-phone" name="phone" class="form-control" data-testid="form-phone" aria-label="Phone Number" placeholder="Enter phone number" required>
+                </div>
+                <div class="form-group">
+                  <label for="form-bio">Short Biography</label>
+                  <textarea id="form-bio" name="bio" class="form-control" data-testid="form-bio" aria-label="Short Bio" placeholder="Enter bio" required></textarea>
+                </div>
+                <div class="btn-group">
+                  <button type="submit" id="form-submit" class="btn btn-primary" data-testid="form-submit">Submit Form</button>
+                  <button type="reset" id="form-reset" class="btn btn-secondary" data-testid="form-reset">Reset Form</button>
+                </div>
+              </form>
+            </div>
+            <div class="status-panel">
+              <span class="status-label">Status:</span>
+              <span id="form-status" class="status-value pending" data-testid="form-status">Not submitted</span>
+            </div>
+          </section>
+
+          <!-- Section 2 — Button Interactions -->
+          <section id="section-2" class="challenge-card" data-testid="section-2">
+            <div class="card-header">
+              <span class="section-number">02</span>
+              <h2>Button Interactions</h2>
+            </div>
+            <p class="card-desc">Practise single click, double click, right click, disabled buttons, a button that enables after 3s, and a self-relabelling button.</p>
+            <div class="playground button-playground">
+              <button id="btn-click" class="btn btn-action" data-testid="btn-click" aria-label="Click button">Click Me</button>
+              <button id="btn-double-click" class="btn btn-action" data-testid="btn-double-click" aria-label="Double click button">Double Click Me</button>
+              <button id="btn-right-click" class="btn btn-action" data-testid="btn-right-click" aria-label="Right click button">Right Click Me</button>
+              <button id="btn-disabled" class="btn btn-action" disabled data-testid="btn-disabled" aria-label="Disabled button">Disabled Button</button>
+              <button id="btn-delayed" class="btn btn-action btn-delayed" disabled data-testid="btn-delayed" aria-label="Delayed enable button">Wait for 3s</button>
+              <button id="btn-self-relabel" class="btn btn-action" data-testid="btn-self-relabel" aria-label="Self relabeling button">Click count: 0</button>
+            </div>
+            <div class="status-panel">
+              <span class="status-label">Outputs:</span>
+              <div class="status-grid">
+                <div>Single click: <span id="status-click" class="status-value pending" data-testid="status-click">No click yet</span></div>
+                <div>Double click: <span id="status-double-click" class="status-value pending" data-testid="status-double-click">Not double-clicked</span></div>
+                <div>Right click: <span id="status-right-click" class="status-value pending" data-testid="status-right-click">Not right-clicked</span></div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Section 3 — Checkboxes & Radio Buttons -->
+          <section id="section-3" class="challenge-card" data-testid="section-3">
+            <div class="card-header">
+              <span class="section-number">03</span>
+              <h2>Checkboxes & Radio Buttons</h2>
+            </div>
+            <p class="card-desc">Practise toggling checkboxes, a select-all that controls them, radio groups, and a checkbox that reveals hidden text.</p>
+            <div class="playground checkbox-playground">
+              <div class="checkbox-group card-subsection">
+                <h3>Colors (Checkboxes)</h3>
+                <label class="control-label">
+                  <input type="checkbox" id="checkbox-select-all" data-testid="select-all-checkbox" aria-label="Select all colors">
+                  <strong>Select All</strong>
+                </label>
+                <div class="checkbox-options">
+                  <label class="control-label">
+                    <input type="checkbox" class="color-checkbox" value="Red" data-testid="checkbox-red" aria-label="Red color"> Red
+                  </label>
+                  <label class="control-label">
+                    <input type="checkbox" class="color-checkbox" value="Green" data-testid="checkbox-green" aria-label="Green color"> Green
+                  </label>
+                  <label class="control-label">
+                    <input type="checkbox" class="color-checkbox" value="Blue" data-testid="checkbox-blue" aria-label="Blue color"> Blue
+                  </label>
+                </div>
+              </div>
+
+              <div class="radio-group card-subsection">
+                <h3>Select Preference (Radio Buttons)</h3>
+                <label class="control-label">
+                  <input type="radio" name="preference" value="Option 1" data-testid="radio-option1" aria-label="Option 1 preference"> Option 1
+                </label>
+                <label class="control-label">
+                  <input type="radio" name="preference" value="Option 2" data-testid="radio-option2" aria-label="Option 2 preference"> Option 2
+                </label>
+                <label class="control-label">
+                  <input type="radio" name="preference" value="Option 3" data-testid="radio-option3" aria-label="Option 3 preference"> Option 3
+                </label>
+                <div class="status-inline">Radio group: <span id="status-radio" class="status-value pending" data-testid="status-radio">Selected: none</span></div>
+              </div>
+
+              <div class="reveal-group card-subsection">
+                <h3>Dynamic Visibility Toggle</h3>
+                <label class="control-label">
+                  <input type="checkbox" id="checkbox-reveal" data-testid="checkbox-reveal" aria-label="Reveal secret message checkbox"> Reveal Secret Text
+                </label>
+                <div id="checkbox-hidden-text" class="hidden-content" data-testid="checkbox-hidden-msg">
+                  🔐 Secret Revealed: Playwright is awesome!
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Section 4 — Dropdowns -->
+          <section id="section-4" class="challenge-card" data-testid="section-4">
+            <div class="card-header">
+              <span class="section-number">04</span>
+              <h2>Dropdowns</h2>
+            </div>
+            <p class="card-desc">Practise standard select, multi-select, a custom div-based dropdown, and a select populated from state.</p>
+            <div class="playground dropdown-playground">
+              <div class="dropdown-group">
+                <label for="dropdown-standard">Standard select:</label>
+                <select id="dropdown-standard" class="form-control select-control" data-testid="dropdown-standard" aria-label="Standard select dropdown">
+                  <option value="">Choose a country...</option>
+                  <option value="US">United States</option>
+                  <option value="IN">India</option>
+                  <option value="UK">United Kingdom</option>
+                  <option value="DE">Germany</option>
+                </select>
+                <div class="status-inline"><span id="status-dropdown-standard" class="status-value pending" data-testid="status-dropdown-standard">Selected: none</span></div>
+              </div>
+
+              <div class="dropdown-group">
+                <label for="dropdown-multi">Multi-select (Ctrl/Cmd + click):</label>
+                <select id="dropdown-multi" class="form-control select-control" multiple data-testid="dropdown-multi" aria-label="Multi select dropdown" style="height: 100px;">
+                  <option value="React">React</option>
+                  <option value="Vue">Vue</option>
+                  <option value="Angular">Angular</option>
+                  <option value="Svelte">Svelte</option>
+                </select>
+                <div class="status-inline"><span id="status-dropdown-multi" class="status-value pending" data-testid="status-dropdown-multi">Selected: none</span></div>
+              </div>
+
+              <div class="dropdown-group">
+                <label>Custom div dropdown:</label>
+                <div class="custom-select" id="custom-select-container">
+                  <button type="button" class="custom-select-trigger" id="custom-select-trigger" data-testid="custom-dropdown-trigger" aria-label="Custom dropdown trigger">Choose...</button>
+                  <ul class="custom-options" id="custom-options-list">
+                    <li data-value="Option X" class="custom-option" data-testid="custom-opt-x">Option X</li>
+                    <li data-value="Option Y" class="custom-option" data-testid="custom-opt-y">Option Y</li>
+                    <li data-value="Option Z" class="custom-option" data-testid="custom-opt-z">Option Z</li>
+                  </ul>
+                </div>
+                <div class="status-inline">Selected: <span id="status-dropdown-custom" class="status-value pending" data-testid="status-dropdown-custom">Choose...</span></div>
+              </div>
+
+              <div class="dropdown-group">
+                <label for="dropdown-state">Select populated from state array:</label>
+                <select id="dropdown-state" class="form-control select-control" data-testid="dropdown-state" aria-label="State-populated select dropdown">
+                  <option value="">Loading...</option>
+                </select>
+                <div class="status-inline"><span id="status-dropdown-state" class="status-value pending" data-testid="status-dropdown-state">Selected: none</span></div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Section 5 — Locator Practice -->
+          <section id="section-5" class="challenge-card" data-testid="section-5">
+            <div class="card-header">
+              <span class="section-number">05</span>
+              <h2>Locator Practice</h2>
+            </div>
+            <p class="card-desc">One element per common locator strategy plus a deeply nested tree for XPath axis practice.</p>
+            <div class="playground locator-playground">
+              <div class="locator-item">
+                <label for="locator-by-id">By ID (#locator-by-id):</label>
+                <input type="text" id="locator-by-id" name="locator-id-name" class="form-control" placeholder="ID target input">
+              </div>
+              <div class="locator-item">
+                <label for="locator-by-class">By class (.locator-by-class):</label>
+                <input type="text" id="locator-class-input" class="form-control locator-by-class" placeholder="Class target input">
+              </div>
+              <div class="locator-item">
+                <label for="locator-name">By name ([name="locator-name"]):</label>
+                <input type="text" id="locator-name-input" name="locator-name" class="form-control" placeholder="Name target input">
+              </div>
+              <div class="locator-item">
+                <label for="locator-testid-input">By data-testid:</label>
+                <input type="text" id="locator-testid-input" data-testid="locator-testid" class="form-control" placeholder="Data-testid input">
+              </div>
+              <div class="locator-item">
+                <label for="locator-aria-input">By aria-label:</label>
+                <input type="text" id="locator-aria-input" aria-label="locator-aria" class="form-control" placeholder="Aria-label input">
+              </div>
+              <div class="locator-item">
+                <label for="locator-placeholder-input">By placeholder:</label>
+                <input type="text" id="locator-placeholder-input" class="form-control" placeholder="Unique Placeholder Target">
+              </div>
+              <div class="locator-item flex-row">
+                <button class="btn btn-outline" id="btn-exact-text" data-testid="btn-exact-text">Submit Exact Text</button>
+                <button class="btn btn-outline" id="btn-partial-text" data-testid="btn-partial-text">Submit Partial Info Here</button>
+                <button class="btn btn-outline" id="btn-css-attribute" data-css="css-practice-value" data-testid="btn-css-attr">CSS Attribute Target</button>
+              </div>
+
+              <div class="xpath-tree card-subsection">
+                <h3>Deeply nested structure for XPath axes:</h3>
+                <div class="tree-root" id="xpath-root">
+                  <div class="tree-parent" data-name="Parent Node">
+                    <span class="node-label">Parent</span>
+                    <div class="tree-children">
+                      <div class="tree-sibling" data-name="Sibling One">
+                        <span class="node-label">Sibling 1</span>
+                      </div>
+                      <div class="tree-target-node" id="xpath-target-node">
+                        <span class="node-label highlight-node">Target Element</span>
+                        <div class="tree-child" data-name="Child Element">
+                          <span class="node-label">Descendant Child</span>
+                        </div>
+                      </div>
+                      <div class="tree-sibling" data-name="Sibling Two">
+                        <span class="node-label">Sibling 2</span>
+                        <button id="btn-xpath-action" class="btn btn-xs" data-testid="btn-xpath-action">Click Sibling 2</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="status-panel">
+              <span class="status-label">Output:</span>
+              <span id="locator-status" class="status-value pending" data-testid="locator-status">No action yet</span>
+            </div>
+          </section>
+
+          <!-- Section 6 — Dynamic Content -->
+          <section id="section-6" class="challenge-card" data-testid="section-6">
+            <div class="card-header">
+              <span class="section-number">06</span>
+              <h2>Dynamic Content</h2>
+            </div>
+            <p class="card-desc">Practise waiting for elements to appear/disappear, text changes, a counter, and dynamically injected content.</p>
+            <div class="playground dynamic-playground">
+              <div class="btn-group">
+                <button id="btn-trigger-dynamic" class="btn btn-primary" data-testid="btn-trigger-dynamic">Trigger Dynamic Elements</button>
+                <button id="btn-trigger-text" class="btn btn-secondary" data-testid="btn-trigger-text">Change Output Text</button>
+              </div>
+              <div class="dynamic-display card-subsection">
+                <div id="dynamic-element-container" class="element-box">
+                  <div class="loading-placeholder" id="dynamic-loading-text">Waiting for delayed element...</div>
+                </div>
+                <div class="dynamic-text-box">
+                  <span id="dynamic-label" data-testid="dynamic-label">Original text</span>
+                </div>
+                <div class="dynamic-counter-box">
+                  <span>Counter: <strong id="dynamic-counter" data-testid="dynamic-counter">0</strong></span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Section 7 — Waits & Synchronisation -->
+          <section id="section-7" class="challenge-card" data-testid="section-7">
+            <div class="card-header">
+              <span class="section-number">07</span>
+              <h2>Waits & Synchronisation</h2>
+            </div>
+            <p class="card-desc">Practise explicit waits: a spinner that becomes Loaded, delayed text, an animated progress bar, and a delayed AJAX response.</p>
+            <div class="playground wait-playground">
+              <div class="wait-item">
+                <h3>⏳ Spinner Wait</h3>
+                <div class="spinner-container">
+                  <div id="wait-spinner" class="spinner" data-testid="wait-spinner"></div>
+                  <span id="status-spinner" class="status-value pending" data-testid="status-spinner">Loading spinner...</span>
+                </div>
+              </div>
+
+              <div class="wait-item">
+                <h3>💬 Delayed Text Value</h3>
+                <div class="delayed-text-box">
+                  <span id="delayed-text" class="status-value pending" data-testid="delayed-text">Waiting...</span>
+                </div>
+              </div>
+
+              <div class="wait-item">
+                <h3>📊 Animated Progress Bar</h3>
+                <div class="progress-section">
+                  <div class="progress-bar-bg">
+                    <div id="wait-progress" class="progress-bar-fill" style="width: 0%;"></div>
+                  </div>
+                  <div class="progress-actions" style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem;">
+                    <span id="status-progress" class="progress-text" data-testid="status-progress">0%</span>
+                    <button id="btn-start-progress" class="btn btn-xs btn-primary" data-testid="btn-start-progress">Start Progress</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="wait-item">
+                <h3>⚡ AJAX Delay Simulation</h3>
+                <div class="ajax-section">
+                  <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                    <button id="btn-trigger-ajax" class="btn btn-secondary" data-testid="btn-trigger-ajax">Call API Endpoint</button>
+                    <div id="status-ajax" class="status-value pending" data-testid="status-ajax">No request sent</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Section 8 — Table Automation -->
+          <section id="section-8" class="challenge-card" data-testid="section-8">
+            <div class="card-header">
+              <span class="section-number">08</span>
+              <h2>Table Automation</h2>
+            </div>
+            <p class="card-desc">Practise reading rows, sorting by name, filtering with search, and paginating (page size 3).</p>
+            <div class="playground table-playground">
+              <div class="table-controls">
+                <input type="text" id="table-search" class="form-control search-control" data-testid="table-search" placeholder="Search table...">
+              </div>
+              <div class="table-wrapper">
+                <table class="practice-table" id="practice-table" data-testid="practice-table">
+                  <thead>
+                    <tr>
+                      <th data-sort="id">ID</th>
+                      <th data-sort="name" class="sortable" id="th-name" data-testid="th-name">Name <span class="sort-icon">↕</span></th>
+                      <th data-sort="role">Role</th>
+                      <th data-sort="status">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody id="table-body">
+                    <!-- Loaded via JS -->
+                  </tbody>
+                </table>
+              </div>
+              <div class="table-pagination">
+                <button id="btn-prev-page" class="btn btn-xs btn-outline" data-testid="btn-prev-page">Previous</button>
+                <span id="table-page-info" class="page-info" data-testid="table-page-info">Page 1 of 3</span>
+                <button id="btn-next-page" class="btn btn-xs btn-outline" data-testid="btn-next-page">Next</button>
+              </div>
+            </div>
+          </section>
+
+          <!-- Section 9 — Alerts -->
+          <section id="section-9" class="challenge-card" data-testid="section-9">
+            <div class="card-header">
+              <span class="section-number">09</span>
+              <h2>Alerts</h2>
+            </div>
+            <p class="card-desc">Practise handling native JS dialogs: alert, confirm and prompt.</p>
+            <div class="playground alert-playground">
+              <div class="btn-group">
+                <button id="btn-alert" class="btn btn-outline" data-testid="btn-alert">Trigger Alert</button>
+                <button id="btn-confirm" class="btn btn-outline" data-testid="btn-confirm">Trigger Confirm</button>
+                <button id="btn-prompt" class="btn btn-outline" data-testid="btn-prompt">Trigger Prompt</button>
+                <button id="btn-custom-alert" class="btn btn-primary" data-testid="btn-custom-alert">Trigger HTML Alert</button>
+              </div>
+              
+              <!-- Custom HTML Alert Modal -->
+              <div id="custom-alert-box" class="custom-alert-overlay" style="display: none;" data-testid="custom-alert-overlay">
+                <div class="custom-alert-card">
+                  <h3>Interactive Notice</h3>
+                  <p>This is a custom CSS-styled alert dialog block inside the DOM tree.</p>
+                  <button id="btn-close-custom-alert" class="btn btn-xs btn-primary" data-testid="btn-close-custom-alert">Acknowledge</button>
+                </div>
+              </div>
+            </div>
+            <div class="status-panel">
+              <span class="status-label">Dialog Response:</span>
+              <span id="alert-status" class="status-value pending" data-testid="alert-status">No interaction yet</span>
+            </div>
+          </section>
+
+          <!-- Section 10 — Modals -->
+          <section id="section-10" class="challenge-card" data-testid="section-10">
+            <div class="card-header">
+              <span class="section-number">10</span>
+              <h2>Modals</h2>
+            </div>
+            <p class="card-desc">Practise opening a modal, closing via the X or close button, and closing by clicking the overlay.</p>
+            <div class="playground modal-playground">
+              <div class="btn-group">
+                <button id="btn-open-modal" class="btn btn-primary" data-testid="btn-open-modal">Open Custom Modal</button>
+                <button id="btn-open-dialog" class="btn btn-secondary" data-testid="btn-open-dialog">Open HTML5 Dialog</button>
+              </div>
+
+              <!-- CSS Modal Overlay -->
+              <div id="modal-overlay" class="modal-overlay" style="display: none;" data-testid="modal-overlay">
+                <div class="modal-card" id="modal-card" data-testid="modal-card">
+                  <div class="modal-header">
+                    <h3>Practice Modal Box</h3>
+                    <button id="btn-modal-x" class="modal-close-x" data-testid="btn-modal-x" aria-label="Close modal">&times;</button>
+                  </div>
+                  <div class="modal-body">
+                    <p>This modal container sits in the top layer of the DOM layout. You can close it using the close button, the X icon, or by clicking the background shadow overlay.</p>
+                  </div>
+                  <div class="modal-footer">
+                    <button id="btn-modal-close" class="btn btn-xs btn-secondary" data-testid="btn-modal-close">Close</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Native HTML5 Dialog modal -->
+              <dialog id="native-modal-dialog" class="native-dialog-card" data-testid="native-modal-dialog">
+                <h3>Native Dialog Element</h3>
+                <p>This is a native HTML5 dialog element rendered using <code>dialog.showModal()</code>.</p>
+                <div class="dialog-footer">
+                  <button id="btn-dialog-close" class="btn btn-xs btn-secondary" data-testid="btn-dialog-close">Close Dialog</button>
+                </div>
+              </dialog>
+            </div>
+            <div class="status-panel">
+              <span class="status-label">Modal Status:</span>
+              <span id="modal-status" class="status-value pending" data-testid="modal-status">Closed</span>
+            </div>
+          </section>
+
+          <!-- Section 11 — iFrame -->
+          <section id="section-11" class="challenge-card" data-testid="section-11">
+            <div class="card-header">
+              <span class="section-number">11</span>
+              <h2>iFrame</h2>
+            </div>
+            <p class="card-desc">Practise switching into an iframe context before interacting with the form inside it.</p>
+            <div class="playground iframe-playground">
+              <iframe id="iframe-challenge" src="./iframe-content.html" data-testid="iframe-challenge-frame" class="practice-iframe"></iframe>
+            </div>
+          </section>
+
+          <!-- Section 12 — Shadow DOM -->
+          <section id="section-12" class="challenge-card" data-testid="section-12">
+            <div class="card-header">
+              <span class="section-number">12</span>
+              <h2>Shadow DOM</h2>
+            </div>
+            <p class="card-desc">Practise piercing a shadow root: the input and button live inside a custom element's shadow DOM.</p>
+            <div class="playground shadow-playground">
+              <!-- Custom web component containing shadow elements -->
+              <shadow-element id="shadow-container" data-testid="shadow-container"></shadow-element>
+            </div>
+          </section>
+
+          <!-- Section 13 — Drag & Drop -->
+          <section id="section-13" class="challenge-card" data-testid="section-13">
+            <div class="card-header">
+              <span class="section-number">13</span>
+              <h2>Drag & Drop</h2>
+            </div>
+            <p class="card-desc">Practise native HTML5 drag and drop: drag the source onto the drop zone.</p>
+            <div class="playground drag-playground">
+              <div class="drag-interactive card-subsection">
+                <h3>Drag Box</h3>
+                <div class="drag-row">
+                  <div id="drag-source" class="draggable-item" draggable="true" data-testid="drag-source" aria-label="Draggable element">Drag Target Box</div>
+                  <div id="drag-target" class="drop-zone" data-testid="drag-target" aria-label="Drop zone element">Drop Zone</div>
+                </div>
+                <div class="status-inline">Drop Status: <span id="status-drag" class="status-value pending" data-testid="status-drag">Nothing dropped</span></div>
+              </div>
+
+              <div class="reorder-list-subsection card-subsection">
+                <h3>Reorderable List</h3>
+                <ul class="sortable-list" id="sortable-list">
+                  <li class="sortable-item" draggable="true" data-index="0" data-testid="sort-item-1">Item 1</li>
+                  <li class="sortable-item" draggable="true" data-index="1" data-testid="sort-item-2">Item 2</li>
+                  <li class="sortable-item" draggable="true" data-index="2" data-testid="sort-item-3">Item 3</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <!-- Section 14 — Hover Menu -->
+          <section id="section-14" class="challenge-card" data-testid="section-14">
+            <div class="card-header">
+              <span class="section-number">14</span>
+              <h2>Hover Menu</h2>
+            </div>
+            <p class="card-desc">Practise hovering a menu item to reveal a submenu (Actions class hover/move-to-element).</p>
+            <div class="playground hover-playground">
+              <div class="hover-menu-container">
+                <div class="hover-trigger" id="hover-trigger-el" data-testid="hover-trigger" aria-label="Hover menu trigger">
+                  Dropdown Hover Menu ▾
+                </div>
+                <ul class="hover-dropdown-menu" id="hover-dropdown-menu" data-testid="hover-menu-list">
+                  <li><a href="#section-14" class="hover-menu-item" data-value="1" data-testid="hover-item-1">Submenu item 1</a></li>
+                  <li><a href="#section-14" class="hover-menu-item" data-value="2" data-testid="hover-item-2">Submenu item 2</a></li>
+                  <li><a href="#section-14" class="hover-menu-item" data-value="3" data-testid="hover-item-3">Submenu item 3</a></li>
+                </ul>
+              </div>
+            </div>
+            <div class="status-panel">
+              <span class="status-label">Active Choice:</span>
+              <span id="hover-status" class="status-value pending" data-testid="hover-status">No item hovered yet</span>
+            </div>
+          </section>
+
+          <!-- Section 15 — Tooltip -->
+          <section id="section-15" class="challenge-card" data-testid="section-15">
+            <div class="card-header">
+              <span class="section-number">15</span>
+              <h2>Tooltip</h2>
+            </div>
+            <p class="card-desc">Practise triggering and reading a tooltip that appears on hover.</p>
+            <div class="playground tooltip-playground">
+              <div class="tooltip-wrapper">
+                <button id="tooltip-trigger" class="btn btn-outline tooltip-trigger-btn" data-testid="tooltip-trigger" data-tooltip="This is the target tooltip message!" aria-label="Button with tooltip">
+                  Hover Over Me
+                </button>
+                <div class="tooltip-box" id="tooltip-message-box" data-testid="tooltip-box">This is the target tooltip message!</div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Section 16 — File Upload -->
+          <section id="section-16" class="challenge-card" data-testid="section-16">
+            <div class="card-header">
+              <span class="section-number">16</span>
+              <h2>File Upload</h2>
+            </div>
+            <p class="card-desc">Practise uploading a file and verifying the selected file name appears.</p>
+            <div class="playground upload-playground">
+              <div class="upload-area" id="drop-zone-upload" data-testid="drop-zone-upload">
+                <p>Drag and drop a file here, or click to browse</p>
+                <input type="file" id="file-upload-input" class="file-input-hidden" data-testid="file-upload-input" aria-label="File upload input">
+                <button type="button" id="btn-browse-file" class="btn btn-xs btn-secondary" data-testid="btn-browse-file">Browse File</button>
+              </div>
+            </div>
+            <div class="status-panel">
+              <span class="status-label">File Status:</span>
+              <span id="upload-status" class="status-value pending" data-testid="upload-status">No file selected</span>
+            </div>
+          </section>
+
+          <!-- Section 17 — Download -->
+          <section id="section-17" class="challenge-card" data-testid="section-17">
+            <div class="card-header">
+              <span class="section-number">17</span>
+              <h2>Download</h2>
+            </div>
+            <p class="card-desc">Practise triggering a file download (practice.txt) and asserting on the downloaded file.</p>
+            <div class="playground download-playground">
+              <button id="btn-download" class="btn btn-primary" data-testid="btn-download" aria-label="Download test file">Download File</button>
+            </div>
+            <div class="status-panel">
+              <span class="status-label">Download Status:</span>
+              <span id="download-status" class="status-value pending" data-testid="download-status">Not downloaded</span>
+            </div>
+          </section>
+
+          <!-- Section 18 — Hidden Elements -->
+          <section id="section-18" class="challenge-card" data-testid="section-18">
+            <div class="card-header">
+              <span class="section-number">18</span>
+              <h2>Hidden Elements</h2>
+            </div>
+            <p class="card-desc">Practise locating elements that are in the DOM but hidden via CSS, and revealing hidden content.</p>
+            <div class="playground hidden-playground">
+              <!-- Hidden using display: none -->
+              <div id="hidden-display-none" class="hidden-element-test display-none" data-testid="hidden-display-none">
+                Visible via display:none pierce!
+              </div>
+
+              <!-- Hidden using visibility: hidden -->
+              <div id="hidden-visibility" class="hidden-element-test visibility-hidden" data-testid="hidden-visibility">
+                Visible via visibility:hidden pierce!
+              </div>
+
+              <!-- Hidden using opacity: 0 -->
+              <div id="hidden-opacity" class="hidden-element-test opacity-zero" data-testid="hidden-opacity">
+                Visible via opacity:0 pierce!
+              </div>
+
+              <!-- Element covered by overlay -->
+              <div class="covered-container">
+                <button id="btn-covered" class="btn btn-outline" data-testid="btn-covered">Click Cover Target</button>
+                <div id="overlay-blocker" class="blocker-overlay" data-testid="overlay-blocker">Cover Block Active</div>
+              </div>
+              <button id="btn-remove-blocker" class="btn btn-xs btn-secondary" data-testid="btn-remove-blocker">Remove Cover</button>
+            </div>
+            <div class="status-panel">
+              <span class="status-label">Visibility Status:</span>
+              <span id="hidden-status" class="status-value pending" data-testid="hidden-status">No action yet</span>
+            </div>
+          </section>
+
+          <!-- Section 19 — Scroll Testing -->
+          <section id="section-19" class="challenge-card" data-testid="section-19">
+            <div class="card-header">
+              <span class="section-number">19</span>
+              <h2>Scroll Testing</h2>
+            </div>
+            <p class="card-desc">Practise scrolling a far-away element into view before asserting on it.</p>
+            <div class="playground scroll-playground">
+              <div class="scroll-wrapper">
+                <div class="scroll-container" id="scroll-container" data-testid="scroll-container">
+                  <div class="spacer-block">Scroll Down...</div>
+                  <div id="scroll-target" class="scroll-target-el" data-testid="scroll-target">
+                    🚩 You scrolled to me!
+                  </div>
+                </div>
+              </div>
+              <div class="infinite-scroll-section card-subsection">
+                <h3>Infinite Scroll List</h3>
+                <div class="infinite-scroll-container" id="infinite-scroll-container" data-testid="infinite-scroll-container">
+                  <ul id="infinite-list">
+                    <li>Seed Item 1</li>
+                    <li>Seed Item 2</li>
+                    <li>Seed Item 3</li>
+                    <li>Seed Item 4</li>
+                    <li>Seed Item 5</li>
+                    <li>Seed Item 6</li>
+                    <li>Seed Item 7</li>
+                    <li>Seed Item 8</li>
+                  </ul>
+                  <div id="infinite-loading" class="infinite-loading-indicator" style="display: none;">Loading more elements...</div>
+                </div>
+              </div>
+            </div>
+            <div class="status-panel">
+              <span class="status-label">Scroll Result:</span>
+              <span id="scroll-status" class="status-value pending" data-testid="scroll-status">Waiting for scroll...</span>
+            </div>
+          </section>
+
+          <!-- Section 20 — Multiple Windows -->
+          <section id="section-20" class="challenge-card" data-testid="section-20">
+            <div class="card-header">
+              <span class="section-number">20</span>
+              <h2>Multiple Windows</h2>
+            </div>
+            <p class="card-desc">Practise switching between window/tab handles after opening a new one.</p>
+            <div class="playground window-playground">
+              <button id="btn-open-window" class="btn btn-primary" data-testid="btn-open-window" aria-label="Open new practice window">Open New Window</button>
+            </div>
+            <div class="status-panel">
+              <span class="status-label">Window Status:</span>
+              <span id="window-status" class="status-value pending" data-testid="window-status">No window opened</span>
+            </div>
+          </section>
+
+          <!-- Section 21 — Authentication Simulation -->
+          <section id="section-21" class="challenge-card" data-testid="section-21">
+            <div class="card-header">
+              <span class="section-number">21</span>
+              <h2>Authentication Simulation</h2>
+            </div>
+            <p class="card-desc">Practise a login flow. Demo credentials: username <code>admin</code>, password <code>admin123</code>.</p>
+            <div class="playground auth-playground">
+              <!-- Auth Form -->
+              <div id="auth-login-box" class="auth-box">
+                <div class="form-group">
+                  <label for="auth-username">Username</label>
+                  <input type="text" id="auth-username" class="form-control" data-testid="auth-username" placeholder="Username">
+                </div>
+                <div class="form-group">
+                  <label for="auth-password">Password</label>
+                  <input type="password" id="auth-password" class="form-control" data-testid="auth-password" placeholder="Password">
+                </div>
+                <button id="btn-login" class="btn btn-primary" data-testid="btn-login">Log In</button>
+              </div>
+
+              <!-- Protected Dashboard -->
+              <div id="auth-dashboard-box" class="auth-box" style="display: none;" data-testid="auth-dashboard">
+                <h3>Welcome back, Administrator!</h3>
+                <p>You have successfully logged in and simulated authentication session state.</p>
+                <div class="token-container">
+                  Session Token: <code id="auth-session-token" data-testid="session-token">AUTH_SUCCESS_TOKEN_998877</code>
+                </div>
+                <button id="btn-logout" class="btn btn-xs btn-secondary" data-testid="btn-logout">Log Out</button>
+              </div>
+            </div>
+            <div class="status-panel">
+              <span class="status-label">Auth State:</span>
+              <span id="auth-status" class="status-value pending" data-testid="auth-status">Logged Out</span>
+            </div>
+          </section>
+
+          <!-- Section 22 — Stale Element Simulation -->
+          <section id="section-22" class="challenge-card" data-testid="section-22">
+            <div class="card-header">
+              <span class="section-number">22</span>
+              <h2>Stale Element Simulation</h2>
+            </div>
+            <p class="card-desc">Practise StaleElementReferenceException: the target node is replaced (new key), so a previously located reference is no longer attached.</p>
+            <div class="playground stale-playground">
+              <div class="stale-container" id="stale-container">
+                <span id="stale-target" class="stale-target-label" data-testid="stale-target">Stale target instance #0</span>
+              </div>
+              <button id="btn-trigger-stale" class="btn btn-secondary" data-testid="btn-trigger-stale">Refresh Target Node</button>
+            </div>
+          </section>
+
+          <!-- Section 23 — Dynamic List -->
+          <section id="section-23" class="challenge-card" data-testid="section-23">
+            <div class="card-header">
+              <span class="section-number">23</span>
+              <h2>Dynamic List</h2>
+            </div>
+            <p class="card-desc">Practise adding and removing items and asserting on the changing list length.</p>
+            <div class="playground dynamic-list-playground">
+              <div class="list-controls">
+                <input type="text" id="input-list-item" class="form-control list-item-control" data-testid="input-list-item" placeholder="Add list item...">
+                <button id="btn-add-list-item" class="btn btn-primary btn-xs" data-testid="btn-add-list-item">Add Item</button>
+              </div>
+              <ul class="dynamic-practice-list" id="dynamic-practice-list" data-testid="dynamic-practice-list">
+                <!-- Initial Seed Items -->
+                <li data-testid="list-item-0">First item <button class="btn-remove-item" data-id="0">Remove</button></li>
+                <li data-testid="list-item-1">Second item <button class="btn-remove-item" data-id="1">Remove</button></li>
+              </ul>
+            </div>
+          </section>
+
+          <!-- Section 24 — Network Delay Simulation -->
+          <section id="section-24" class="challenge-card" data-testid="section-24">
+            <div class="card-header">
+              <span class="section-number">24</span>
+              <h2>Network Delay Simulation</h2>
+            </div>
+            <p class="card-desc">Practise waiting through a simulated network delay before the response text appears.</p>
+            <div class="playground delay-playground">
+              <button id="btn-trigger-delay" class="btn btn-primary" data-testid="btn-trigger-delay" aria-label="Trigger network delay">Simulate API Request</button>
+              <div id="delay-loading" class="spinner delay-spinner" style="display: none;" data-testid="delay-spinner"></div>
+            </div>
+            <div class="status-panel">
+              <span class="status-label">Network Status:</span>
+              <span id="delay-status" class="status-value pending" data-testid="delay-status">Idle</span>
+            </div>
+          </section>
+
+          <!-- Section 25 — Random Fail (Flaky) Elements -->
+          <section id="section-25" class="challenge-card" data-testid="section-25">
+            <div class="card-header">
+              <span class="section-number">25</span>
+              <h2>Random Fail (Flaky) Elements</h2>
+            </div>
+            <p class="card-desc">Practise handling flaky outcomes: this button passes or fails roughly 50/50 each run.</p>
+            <div class="playground flaky-playground">
+              <button id="btn-trigger-flaky" class="btn btn-outline" data-testid="btn-trigger-flaky">Execute Operation</button>
+            </div>
+            <div class="status-panel">
+              <span class="status-label">Server Status:</span>
+              <span id="flaky-status" class="status-value pending" data-testid="flaky-status">Not run yet</span>
+            </div>
+          </section>
+
+          <!-- Section 26 — Keyboard Actions -->
+          <section id="section-26" class="challenge-card" data-testid="section-26">
+            <div class="card-header">
+              <span class="section-number">26</span>
+              <h2>Keyboard Actions</h2>
+            </div>
+            <p class="card-desc">Practise sending keys: type here and watch the last key; Arrow Up/Down change the counter. Try Enter, Tab and arrows.</p>
+            <div class="playground keyboard-playground">
+              <div class="form-group">
+                <label for="keyboard-input">Keyboard Input Target</label>
+                <input type="text" id="keyboard-input" class="form-control" data-testid="keyboard-input" placeholder="Click and type keys...">
+              </div>
+              <div class="keyboard-stats status-grid">
+                <div>Last key: <span id="status-keyboard-key" class="status-value pending" data-testid="status-keyboard-key">None</span></div>
+                <div>Arrow counter: <span id="status-keyboard-counter" class="status-value pending" data-testid="status-keyboard-counter">0</span></div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Section 27 — Slider -->
+          <section id="section-27" class="challenge-card" data-testid="section-27">
+            <div class="card-header">
+              <span class="section-number">27</span>
+              <h2>Slider</h2>
+            </div>
+            <p class="card-desc">Practise moving a range slider and reading its live value.</p>
+            <div class="playground slider-playground">
+              <div class="slider-container">
+                <input type="range" id="range-slider" min="0" max="100" value="50" class="form-control-range" data-testid="range-slider" aria-label="Value range slider">
+                <span class="slider-display">Value: <strong id="slider-val" data-testid="slider-value">50</strong></span>
+              </div>
+            </div>
+          </section>
+
+          <!-- Section 28 — Date Picker -->
+          <section id="section-28" class="challenge-card" data-testid="section-28">
+            <div class="card-header">
+              <span class="section-number">28</span>
+              <h2>Date Picker</h2>
+            </div>
+            <p class="card-desc">Practise selecting a date and asserting the echoed value. Use both the native HTML5 date input and the custom interactive calendar dialog picker.</p>
+            <div class="playground date-playground">
+              <div class="form-group">
+                <label for="date-picker-standard">Standard HTML5 Date Input</label>
+                <input type="date" id="date-picker-standard" class="form-control select-control" data-testid="date-picker-standard">
+              </div>
+
+              <div class="custom-calendar-picker card-subsection">
+                <h3>Custom Calendar Dialog Picker</h3>
+                <div class="calendar-trigger-container">
+                  <button type="button" id="btn-custom-date-trigger" class="btn btn-outline" data-testid="btn-custom-date-trigger">📅 Open Calendar</button>
+                  <span id="cal-selected-display" class="cal-selected-display" data-testid="cal-selected-display" style="display:none;"></span>
+                </div>
+                <!-- Custom Date Picker Dropdown -->
+                <div class="custom-calendar-dropdown" id="custom-calendar-dropdown" style="display: none;" data-testid="custom-calendar-dropdown">
+                  <div class="calendar-header">
+                    <button id="btn-calendar-prev" class="btn-cal-nav" data-testid="btn-calendar-prev">&#8249;</button>
+                    <span id="calendar-month-year" data-testid="calendar-month-year">July 2026</span>
+                    <button id="btn-calendar-next" class="btn-cal-nav" data-testid="btn-calendar-next">&#8250;</button>
+                  </div>
+                  <table class="calendar-grid" role="grid">
+                    <thead>
+                      <tr>
+                        <th scope="col">Su</th><th scope="col">Mo</th><th scope="col">Tu</th><th scope="col">We</th><th scope="col">Th</th><th scope="col">Fr</th><th scope="col">Sa</th>
+                      </tr>
+                    </thead>
+                    <tbody id="calendar-days-body">
+                      <!-- Populated via JS -->
+                    </tbody>
+                  </table>
+                  <div class="calendar-footer">
+                    <button type="button" id="btn-cal-today" class="btn-cal-today" data-testid="btn-cal-today">Today</button>
+                    <button type="button" id="btn-cal-clear" class="btn-cal-clear" data-testid="btn-cal-clear">Clear</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="status-panel">
+              <span class="status-label">Chosen date:</span>
+              <span id="date-status" class="status-value pending" data-testid="date-status">none</span>
+            </div>
+          </section>
+
+          <!-- Section 29 — Resizable Element -->
+          <section id="section-29" class="challenge-card" data-testid="section-29">
+            <div class="card-header">
+              <span class="section-number">29</span>
+              <h2>Resizable Element</h2>
+            </div>
+            <p class="card-desc">Practise resizing an element by dragging its bottom-right handle.</p>
+            <div class="playground resize-playground">
+              <div id="resizable-box" class="resizable-box-element" data-testid="resizable-box">
+                <div class="resize-inner-label">Drag handle corner</div>
+                <div class="resize-stats" id="resizable-stats" data-testid="resizable-stats">180px x 150px</div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Section 30 — Complex DOM Structure -->
+          <section id="section-30" class="challenge-card" data-testid="section-30">
+            <div class="card-header">
+              <span class="section-number">30</span>
+              <h2>Complex DOM Structure</h2>
+            </div>
+            <p class="card-desc">Practise advanced XPath axes and CSS combinators on a deeply nested, multi-sibling tree.</p>
+            <div class="playground complex-playground">
+              <div class="complex-hierarchy">
+                <div class="complex-wrapper-1" data-node="wrapper-level-1">
+                  <div class="complex-wrapper-2" data-node="wrapper-level-2">
+                    <ul class="nested-tree-list">
+                      <li class="tree-item-branch" data-id="branch-A">
+                        <span class="branch-title">Node Group A</span>
+                        <ul class="nested-tree-list">
+                          <li class="tree-item-leaf" data-value="A1" data-testid="complex-leaf-1">list leaf 1</li>
+                          <li class="tree-item-leaf" data-value="A2" data-testid="complex-leaf-2">list leaf 2</li>
+                        </ul>
+                      </li>
+                      <li class="tree-item-branch" data-id="branch-B">
+                        <span class="branch-title">Node Group B</span>
+                        <ul class="nested-tree-list">
+                          <li class="tree-item-leaf" data-value="B1" data-testid="complex-leaf-3">list leaf 3</li>
+                          <li class="tree-item-leaf disabled-leaf" data-value="B2" data-testid="complex-leaf-4">list leaf 4</li>
+                        </ul>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div class="complex-table-container card-subsection">
+                  <h3>Nested Sibling Actions Table</h3>
+                  <table class="practice-table complex-table" data-testid="complex-table">
+                    <thead>
+                      <tr>
+                        <th>Item Row</th>
+                        <th>Identifier</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr data-row="row-1">
+                        <td>Item Alpha</td>
+                        <td><span class="badge" data-badge="alpha">ID-ALPHA</span></td>
+                        <td>
+                          <button class="btn btn-xs btn-outline btn-complex-action" data-row-id="alpha-btn-1" data-testid="complex-alpha-btn-1">View</button>
+                          <button class="btn btn-xs btn-primary btn-complex-action" data-row-id="alpha-btn-2" data-testid="complex-alpha-btn-2">Edit</button>
+                        </td>
+                      </tr>
+                      <tr data-row="row-2">
+                        <td>Item Beta</td>
+                        <td><span class="badge" data-badge="beta">ID-BETA</span></td>
+                        <td>
+                          <button class="btn btn-xs btn-outline btn-complex-action" data-row-id="beta-btn-1" data-testid="complex-beta-btn-1">View</button>
+                          <button class="btn btn-xs btn-primary btn-complex-action" data-row-id="beta-btn-2" data-testid="complex-beta-btn-2">Edit</button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div class="status-panel">
+              <span class="status-label">Complex Action Triggered:</span>
+              <span id="complex-status" class="status-value pending" data-testid="complex-status">None</span>
+            </div>
+          </section>
+
+          <!-- Section 31 — Autocomplete / Typeahead -->
+          <section id="section-31" class="challenge-card" data-testid="section-31">
+            <div class="card-header">
+              <span class="section-number">31</span>
+              <h2>Autocomplete / Typeahead</h2>
+            </div>
+            <p class="card-desc">Type in the search field to trigger a live suggestions dropdown. Practice waiting for dynamic options and selecting an item from an async list.</p>
+            <div class="playground">
+              <div class="autocomplete-wrapper" id="autocomplete-wrapper">
+                <input type="text" id="autocomplete-input" class="form-control" placeholder="Type a language (e.g. Java, Python...)" autocomplete="off" data-testid="autocomplete-input" aria-label="Autocomplete search">
+                <ul id="autocomplete-list" class="autocomplete-list" role="listbox" aria-label="Suggestions"></ul>
+              </div>
+            </div>
+            <div class="status-panel">
+              <span class="status-label">Selected:</span>
+              <span id="autocomplete-status" class="status-value pending" data-testid="autocomplete-status">None selected</span>
+            </div>
+          </section>
+
+          <!-- Section 32 — Context Menu (Right-Click) -->
+          <section id="section-32" class="challenge-card" data-testid="section-32">
+            <div class="card-header">
+              <span class="section-number">32</span>
+              <h2>Context Menu (Right-Click)</h2>
+            </div>
+            <p class="card-desc">Right-click the target area to open a custom context menu. Practice using <code>page.click({ button: 'right' })</code> and selecting menu options.</p>
+            <div class="playground">
+              <div id="context-target" class="context-target" data-testid="context-target" aria-label="Right-click target area">
+                <span>Right-click anywhere in this box</span>
+              </div>
+              <ul id="context-menu" class="context-menu" role="menu" style="display:none;">
+                <li role="menuitem" id="ctx-copy" data-testid="ctx-copy">📋 Copy Text</li>
+                <li role="menuitem" id="ctx-highlight" data-testid="ctx-highlight">🖊 Highlight</li>
+                <li role="menuitem" id="ctx-inspect" data-testid="ctx-inspect">🔍 Inspect</li>
+              </ul>
+            </div>
+            <div class="status-panel">
+              <span class="status-label">Action:</span>
+              <span id="context-status" class="status-value pending" data-testid="context-status">No action taken</span>
+            </div>
+          </section>
+
+          <!-- Section 33 — Clipboard / Copy to Clipboard -->
+          <section id="section-33" class="challenge-card" data-testid="section-33">
+            <div class="card-header">
+              <span class="section-number">33</span>
+              <h2>Clipboard / Copy to Clipboard</h2>
+            </div>
+            <p class="card-desc">Click the copy button to capture the snippet to your clipboard. Practise reading the clipboard with Playwright's <code>page.evaluate()</code> or browser context grants.</p>
+            <div class="playground">
+              <div class="clipboard-row">
+                <code id="clipboard-text" class="clipboard-code" data-testid="clipboard-text">npx playwright test --headed --project=chromium</code>
+                <button id="btn-copy-clipboard" class="btn btn-primary" data-testid="btn-copy-clipboard" aria-label="Copy to clipboard">Copy</button>
+              </div>
+            </div>
+            <div class="status-panel">
+              <span class="status-label">Status:</span>
+              <span id="clipboard-status" class="status-value pending" data-testid="clipboard-status">Not copied yet</span>
+            </div>
+          </section>
+
+          <!-- Section 34 — Multi-Step Wizard -->
+          <section id="section-34" class="challenge-card" data-testid="section-34">
+            <div class="card-header">
+              <span class="section-number">34</span>
+              <h2>Multi-Step Wizard / Stepper</h2>
+            </div>
+            <p class="card-desc">Navigate a 3-step form wizard: Personal Info → Account Setup → Review. Practice state validation across multiple steps and Next/Back button interactions.</p>
+            <div class="playground">
+              <div class="wizard-progress">
+                <div class="wizard-step active" id="wiz-step-dot-1" data-testid="wiz-step-dot-1">1</div>
+                <div class="wizard-connector"></div>
+                <div class="wizard-step" id="wiz-step-dot-2" data-testid="wiz-step-dot-2">2</div>
+                <div class="wizard-connector"></div>
+                <div class="wizard-step" id="wiz-step-dot-3" data-testid="wiz-step-dot-3">3</div>
+              </div>
+              <div id="wizard-panel-1" class="wizard-panel" data-testid="wizard-panel-1">
+                <h3 class="wizard-title">Step 1: Personal Info</h3>
+                <div class="form-group"><label>First Name<input type="text" id="wiz-fname" class="form-control" data-testid="wiz-fname" placeholder="First name"></label></div>
+                <div class="form-group"><label>Last Name<input type="text" id="wiz-lname" class="form-control" data-testid="wiz-lname" placeholder="Last name"></label></div>
+              </div>
+              <div id="wizard-panel-2" class="wizard-panel" data-testid="wizard-panel-2" style="display:none;">
+                <h3 class="wizard-title">Step 2: Account Setup</h3>
+                <div class="form-group"><label>Username<input type="text" id="wiz-username" class="form-control" data-testid="wiz-username" placeholder="Choose a username"></label></div>
+                <div class="form-group"><label>Role
+                  <select id="wiz-role" class="form-control select-control" data-testid="wiz-role">
+                    <option value="">Select role</option>
+                    <option value="qa">QA Engineer</option>
+                    <option value="sdet">SDET</option>
+                    <option value="dev">Developer</option>
+                  </select>
+                </label></div>
+              </div>
+              <div id="wizard-panel-3" class="wizard-panel" data-testid="wizard-panel-3" style="display:none;">
+                <h3 class="wizard-title">Step 3: Review & Submit</h3>
+                <div id="wizard-review" class="wizard-review" data-testid="wizard-review"></div>
+              </div>
+              <div class="wizard-buttons btn-group" style="margin-top:1rem;">
+                <button id="wiz-back" class="btn btn-secondary" data-testid="wiz-back" style="display:none;">← Back</button>
+                <button id="wiz-next" class="btn btn-primary" data-testid="wiz-next">Next →</button>
+                <button id="wiz-submit" class="btn btn-primary" data-testid="wiz-submit" style="display:none;">✓ Submit</button>
+              </div>
+            </div>
+            <div class="status-panel">
+              <span class="status-label">Wizard:</span>
+              <span id="wizard-status" class="status-value pending" data-testid="wizard-status">Step 1 of 3</span>
+            </div>
+          </section>
+
+          <!-- Section 35 — Color Picker -->
+          <section id="section-35" class="challenge-card" data-testid="section-35">
+            <div class="card-header">
+              <span class="section-number">35</span>
+              <h2>Color Picker</h2>
+            </div>
+            <p class="card-desc">Use the native color picker to select a colour. Practice automating <code>input[type=color]</code> using Playwright's <code>page.fill()</code> with hex values like <code>#ff6600</code>.</p>
+            <div class="playground">
+              <div class="color-picker-row">
+                <label class="color-picker-label">
+                  Pick a color:
+                  <input type="color" id="color-input" class="color-input" value="#3b82f6" data-testid="color-input" aria-label="Color picker">
+                </label>
+                <div id="color-preview" class="color-preview" data-testid="color-preview" style="background:#3b82f6;"></div>
+                <code id="color-hex" class="color-hex" data-testid="color-hex">#3b82f6</code>
+              </div>
+              <button id="btn-apply-color" class="btn btn-primary" data-testid="btn-apply-color" style="margin-top:0.75rem;">Apply Color</button>
+            </div>
+            <div class="status-panel">
+              <span class="status-label">Selected color:</span>
+              <span id="color-status" class="status-value pending" data-testid="color-status">Not applied yet</span>
+            </div>
+          </section>
+
+          <!-- Section 36 — Nested iFrames -->
+          <section id="section-36" class="challenge-card" data-testid="section-36">
+            <div class="card-header">
+              <span class="section-number">36</span>
+              <h2>Nested iFrames</h2>
+            </div>
+            <p class="card-desc">Practise switching between multiple levels of nested iframes. An outer frame contains an inner frame — you must switch context twice to reach the deepest element.</p>
+            <div class="playground">
+              <iframe
+                id="outer-iframe"
+                data-testid="outer-iframe"
+                class="practice-iframe nested-outer-iframe"
+                srcdoc='<!DOCTYPE html>
+<html>
+<head><style>
+  body{margin:0;padding:16px;font-family:sans-serif;background:#0f1530;color:#94a3b8;font-size:13px;}
+  h4{color:#60a5fa;margin:0 0 10px;}
+  iframe{width:100%;height:160px;border:1px dashed #2d3a6e;border-radius:4px;background:#05071a;}
+  label{font-size:12px;color:#64748b;}
+</style></head>
+<body>
+  <h4>Outer Frame (Level 1)</h4>
+  <label>Inner frame below — switch context again to reach it:</label>
+  <iframe
+    id="inner-iframe"
+    data-testid="inner-iframe"
+    srcdoc="<!DOCTYPE html><html><head><style>body{margin:0;padding:12px;font-family:sans-serif;background:#05071a;color:#94a3b8;} h4{color:#34d399;margin:0 0 8px;font-size:13px;} input{width:100%;padding:6px 10px;background:#0f1530;border:1px solid #2d3a6e;border-radius:4px;color:#e8eaf6;font-size:13px;box-sizing:border-box;} button{margin-top:8px;padding:6px 14px;background:#3b82f6;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:12px;} #inner-status{margin-top:8px;font-size:12px;color:#10b981;}</style></head><body><h4>Inner Frame (Level 2)</h4><input type=&quot;text&quot; id=&quot;nested-input&quot; data-testid=&quot;nested-input&quot; placeholder=&quot;Type something here&quot;><br><button id=&quot;nested-btn&quot; data-testid=&quot;nested-btn&quot; onclick=&quot;document.getElementById(&apos;inner-status&apos;).textContent=&apos;Clicked: &apos;+document.getElementById(&apos;nested-input&apos;).value&quot;>Submit</button><div id=&quot;inner-status&quot; data-testid=&quot;nested-status&quot;></div></body></html>"
+  ></iframe>
+</body>
+</html>'
+              ></iframe>
+            </div>
+            <div class="status-panel">
+              <span class="status-label">Challenge:</span>
+              <span class="status-value pending">Switch to outer → switch to inner → fill input → click Submit</span>
+            </div>
+          </section>
+
+          <!-- Section 37 — Nested Tables -->
+          <section id="section-37" class="challenge-card" data-testid="section-37">
+            <div class="card-header">
+              <span class="section-number">37</span>
+              <h2>Nested Tables</h2>
+            </div>
+            <p class="card-desc">Practise navigating complex table structures: a main data table with an expandable nested inner table per row. Use XPath row indexing and CSS nth-child selectors.</p>
+            <div class="playground">
+              <table class="practice-table nested-table-outer" data-testid="nested-table-outer">
+                <thead>
+                  <tr>
+                    <th class="sortable">Order ID</th>
+                    <th>Customer</th>
+                    <th>Total</th>
+                    <th>Status</th>
+                    <th>Details</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr data-testid="nested-row-1">
+                    <td data-testid="order-id-1"><code>#ORD-001</code></td>
+                    <td>Alice Johnson</td>
+                    <td>$142.00</td>
+                    <td><span class="tag tag-success" data-testid="status-1">Shipped</span></td>
+                    <td>
+                      <button class="btn btn-xs btn-outline nested-expand-btn" data-testid="expand-btn-1" data-row="1">▶ Expand</button>
+                    </td>
+                  </tr>
+                  <tr id="nested-detail-1" class="nested-detail-row" data-testid="nested-detail-1" style="display:none;">
+                    <td colspan="5" style="padding:0;">
+                      <table class="practice-table nested-table-inner" data-testid="nested-inner-table-1">
+                        <thead><tr><th>Item</th><th>Qty</th><th>Unit Price</th><th>Subtotal</th></tr></thead>
+                        <tbody>
+                          <tr><td data-testid="item-1-1">Mechanical Keyboard</td><td>1</td><td>$89.00</td><td>$89.00</td></tr>
+                          <tr><td data-testid="item-1-2">USB-C Hub</td><td>2</td><td>$26.50</td><td>$53.00</td></tr>
+                        </tbody>
+                      </table>
+                    </td>
+                  </tr>
+                  <tr data-testid="nested-row-2">
+                    <td data-testid="order-id-2"><code>#ORD-002</code></td>
+                    <td>Bob Martinez</td>
+                    <td>$78.50</td>
+                    <td><span class="tag tag-pending" data-testid="status-2">Processing</span></td>
+                    <td>
+                      <button class="btn btn-xs btn-outline nested-expand-btn" data-testid="expand-btn-2" data-row="2">▶ Expand</button>
+                    </td>
+                  </tr>
+                  <tr id="nested-detail-2" class="nested-detail-row" data-testid="nested-detail-2" style="display:none;">
+                    <td colspan="5" style="padding:0;">
+                      <table class="practice-table nested-table-inner" data-testid="nested-inner-table-2">
+                        <thead><tr><th>Item</th><th>Qty</th><th>Unit Price</th><th>Subtotal</th></tr></thead>
+                        <tbody>
+                          <tr><td data-testid="item-2-1">Wireless Mouse</td><td>1</td><td>$45.00</td><td>$45.00</td></tr>
+                          <tr><td data-testid="item-2-2">Mouse Pad XL</td><td>1</td><td>$33.50</td><td>$33.50</td></tr>
+                        </tbody>
+                      </table>
+                    </td>
+                  </tr>
+                  <tr data-testid="nested-row-3">
+                    <td data-testid="order-id-3"><code>#ORD-003</code></td>
+                    <td>Carol Lee</td>
+                    <td>$219.99</td>
+                    <td><span class="tag tag-error" data-testid="status-3">Cancelled</span></td>
+                    <td>
+                      <button class="btn btn-xs btn-outline nested-expand-btn" data-testid="expand-btn-3" data-row="3">▶ Expand</button>
+                    </td>
+                  </tr>
+                  <tr id="nested-detail-3" class="nested-detail-row" data-testid="nested-detail-3" style="display:none;">
+                    <td colspan="5" style="padding:0;">
+                      <table class="practice-table nested-table-inner" data-testid="nested-inner-table-3">
+                        <thead><tr><th>Item</th><th>Qty</th><th>Unit Price</th><th>Subtotal</th></tr></thead>
+                        <tbody>
+                          <tr><td data-testid="item-3-1">4K Monitor</td><td>1</td><td>$219.99</td><td>$219.99</td></tr>
+                        </tbody>
+                      </table>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="status-panel">
+              <span class="status-label">Expanded:</span>
+              <span id="nested-table-status" class="status-value pending" data-testid="nested-table-status">No row expanded</span>
+            </div>
+          </section>
+
+          <!-- Section 38 — Page Operations -->
+          <section id="section-38" class="challenge-card" data-testid="section-38">
+            <div class="card-header">
+              <span class="section-number">38</span>
+              <h2>Page Operations</h2>
+            </div>
+            <p class="card-desc">Practise page-level interactions: changing document title, reloading/refresh tracking, and handling multiple pages.</p>
+            <div class="playground page-ops-playground">
+              <div class="btn-group">
+                <button id="btn-change-title" class="btn btn-outline" data-testid="btn-change-title">Change Title</button>
+                <button id="btn-simulate-refresh" class="btn btn-outline" data-testid="btn-simulate-refresh">Simulate Refresh</button>
+                <button id="btn-open-newpage" class="btn btn-outline" data-testid="btn-open-newpage">Open New Page</button>
+              </div>
+              <div class="info-box" style="margin-top: 1rem;">
+                <div><strong>Current Title:</strong> <span id="current-title-val" data-testid="current-title-val">Automation Playground</span></div>
+                <div><strong>Last Page Load:</strong> <span id="last-load-val" data-testid="last-load-val">Initializing...</span></div>
+              </div>
+            </div>
+            <div class="status-panel">
+              <span class="status-label">Ops Status:</span>
+              <span id="page-ops-status" class="status-value pending" data-testid="page-ops-status">Ready</span>
+            </div>
+          </section>
+
+          <!-- Section 39 — Bulk Links Scraper -->
+          <section id="section-39" class="challenge-card" data-testid="section-39">
+            <div class="card-header">
+              <span class="section-number">39</span>
+              <h2>Bulk Links Scraper</h2>
+            </div>
+            <p class="card-desc">Practise scraping: identify, iterate, and count 100+ unique links on the page.</p>
+            <div class="playground links-playground">
+              <div class="links-scroll-container" id="links-scroll-container" style="max-height: 200px; overflow-y: auto; border: 1px solid var(--border-color); padding: 1rem; border-radius: 6px; background: var(--bg-input);">
+                <div class="links-grid" id="links-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 0.5rem;">
+                  <!-- 100 links will be populated dynamically -->
+                </div>
+              </div>
+            </div>
+            <div class="status-panel">
+              <span class="status-label">Scrape Stats:</span>
+              <span id="scrape-status" class="status-value pending" data-testid="scrape-status">0 links verified</span>
+            </div>
+          </section>
+
+          <!-- Section 40 — Infinite Scroll -->
+          <section id="section-40" class="challenge-card" data-testid="section-40">
+            <div class="card-header">
+              <span class="section-number">40</span>
+              <h2>Infinite Scroll</h2>
+            </div>
+            <p class="card-desc">Practise infinite scrolling: scroll the container to auto-load new items and verify dynamically added DOM elements.</p>
+            <div class="playground scroll-playground">
+              <div class="scroll-container-box" id="inf-scroll-container" style="height: 250px; overflow-y: auto; border: 1px solid var(--border-color); border-radius: 6px; padding: 1rem; background: var(--bg-input);">
+                <ul id="inf-scroll-list" style="list-style: none; padding: 0; margin: 0;">
+                  <!-- Dynamic items -->
+                </ul>
+                <div id="inf-scroll-loader" class="loader-text" style="text-align: center; padding: 0.5rem; color: var(--secondary); display: none;">Loading more items...</div>
+              </div>
+            </div>
+            <div class="status-panel">
+              <span class="status-label">Items Loaded:</span>
+              <span id="inf-scroll-status" class="status-value pending" data-testid="inf-scroll-status">0 items</span>
+            </div>
+          </section>
+
+          <!-- Section 41 — Search with Debounce -->
+          <section id="section-41" class="challenge-card" data-testid="section-41">
+            <div class="card-header">
+              <span class="section-number">41</span>
+              <h2>Search with Debounce</h2>
+            </div>
+            <p class="card-desc">Practise waiting for asynchronous input: the search query triggers matching results after a 500ms pause.</p>
+            <div class="playground search-playground">
+              <div class="form-group" style="position: relative;">
+                <input type="text" id="debounce-search-input" class="form-control" placeholder="Search tech stack (e.g. Playwright, Vite, TS)..." data-testid="debounce-search-input">
+                <span id="search-spinner" style="position: absolute; right: 12px; top: 12px; display: none; color: var(--secondary);">⚡ Typing...</span>
+              </div>
+              <ul id="debounce-search-results" class="autocomplete-list" style="position: relative; box-shadow: none; border-radius: 6px; margin-top: 0.5rem;">
+                <!-- Results -->
+              </ul>
+            </div>
+            <div class="status-panel">
+              <span class="status-label">Search Status:</span>
+              <span id="debounce-search-status" class="status-value pending" data-testid="debounce-search-status">Idle</span>
+            </div>
+          </section>
+
+          <!-- Section 42 — Character API Simulation -->
+          <section id="section-42" class="challenge-card" data-testid="section-42">
+            <div class="card-header">
+              <span class="section-number">42</span>
+              <h2>Character API Call Simulation</h2>
+            </div>
+            <p class="card-desc">Practise network interception: typing each character fires a separate simulated API request instantly.</p>
+            <div class="playground api-playground">
+              <div class="form-group">
+                <input type="text" id="api-sim-input" class="form-control" placeholder="Type fast to trigger multiple API requests..." data-testid="api-sim-input">
+              </div>
+              <div class="api-log-box" style="margin-top: 1rem; border: 1px solid var(--border-color); border-radius: 6px; padding: 1rem; max-height: 150px; overflow-y: auto; background: var(--bg-main); font-family: monospace; font-size: 0.85rem;">
+                <div style="color: var(--text-secondary); margin-bottom: 0.5rem; font-weight: bold;">Simulated Network Request Log:</div>
+                <div id="api-log-list"></div>
+              </div>
+            </div>
+            <div class="status-panel">
+              <span class="status-label">API Requests:</span>
+              <span id="api-sim-status" class="status-value pending" data-testid="api-sim-status">0 requests</span>
+            </div>
+          </section>
+
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- Scroll to Top Button -->
+  <button id="scroll-to-top" class="scroll-to-top-btn" aria-label="Scroll to top" title="Back to top">
+    ↑
+  </button>
+
+  <script type="module" src="/src/main.ts"></script>
+</body>
+</html>

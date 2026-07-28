@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#1d4ed8"/>
+      <stop offset="100%" stop-color="#0d9488"/>
+    </linearGradient>
+    <linearGradient id="glow" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#60a5fa" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#14b8a6" stop-opacity="0.1"/>
+    </linearGradient>
+  </defs>
+  <!-- Background -->
+  <rect width="48" height="48" rx="12" fill="url(#bg)"/>
+  <rect width="48" height="48" rx="12" fill="url(#glow)"/>
+  <!-- Left bracket < -->
+  <path d="M11 24 L19 15 L21 17.2 L15.4 24 L21 30.8 L19 33 Z" fill="white" opacity="0.92"/>
+  <!-- Right bracket > -->
+  <path d="M37 24 L29 15 L27 17.2 L32.6 24 L27 30.8 L29 33 Z" fill="white" opacity="0.92"/>
+  <!-- Play triangle (center) -->
+  <polygon points="20.5,19 20.5,29 29,24" fill="white" opacity="0.55"/>
+</svg>
