@@ -1084,7 +1084,7 @@ const addListItem = () => {
   if (val) {
     const li = document.createElement('li');
     li.setAttribute('data-testid', `list-item-${listIndex}`);
-    li.innerHTML = `${val} <button class="btn-remove-item" data-id="${listIndex}">Remove</button>`;
+    li.innerHTML = `${val} <button class="btn-remove-item" data-id="${listIndex}" data-testid="btn-remove-item-${listIndex}" aria-label="Remove ${val}">Remove</button>`;
     dynamicPracticeList.appendChild(li);
     
     inputListItem.value = '';

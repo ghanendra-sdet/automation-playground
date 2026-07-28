@@ -19,7 +19,7 @@
           Automation Playground
         </a>
         <div class="header-actions">
-          <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle theme">
+          <button id="theme-toggle" class="theme-toggle-btn" data-testid="theme-toggle" aria-label="Toggle theme">
             <span class="sun-icon">☀️</span>
             <span class="moon-icon">🌙</span>
           </button>
@@ -75,8 +75,8 @@
                   <textarea id="form-bio" name="bio" class="form-control" data-testid="form-bio" aria-label="Short Bio" placeholder="Enter bio" required></textarea>
                 </div>
                 <div class="btn-group">
-                  <button type="submit" id="form-submit" class="btn btn-primary" data-testid="form-submit">Submit Form</button>
-                  <button type="reset" id="form-reset" class="btn btn-secondary" data-testid="form-reset">Reset Form</button>
+                  <button type="submit" id="form-submit" class="btn btn-primary" data-testid="form-submit" aria-label="Submit Form">Submit Form</button>
+                  <button type="reset" id="form-reset" class="btn btn-secondary" data-testid="form-reset" aria-label="Reset Form">Reset Form</button>
                 </div>
               </form>
             </div>
@@ -251,9 +251,9 @@
                 <input type="text" id="locator-placeholder-input" class="form-control" placeholder="Unique Placeholder Target">
               </div>
               <div class="locator-item flex-row">
-                <button class="btn btn-outline" id="btn-exact-text" data-testid="btn-exact-text">Submit Exact Text</button>
-                <button class="btn btn-outline" id="btn-partial-text" data-testid="btn-partial-text">Submit Partial Info Here</button>
-                <button class="btn btn-outline" id="btn-css-attribute" data-css="css-practice-value" data-testid="btn-css-attr">CSS Attribute Target</button>
+                <button class="btn btn-outline" id="btn-exact-text" data-testid="btn-exact-text" aria-label="Trigger Exact Text Match">Submit Exact Text</button>
+                <button class="btn btn-outline" id="btn-partial-text" data-testid="btn-partial-text" aria-label="Trigger Partial Text Match">Submit Partial Info Here</button>
+                <button class="btn btn-outline" id="btn-css-attribute" data-css="css-practice-value" data-testid="btn-css-attr" aria-label="Trigger CSS Attribute Target">CSS Attribute Target</button>
               </div>
 
               <div class="xpath-tree card-subsection">
@@ -273,7 +273,7 @@
                       </div>
                       <div class="tree-sibling" data-name="Sibling Two">
                         <span class="node-label">Sibling 2</span>
-                        <button id="btn-xpath-action" class="btn btn-xs" data-testid="btn-xpath-action">Click Sibling 2</button>
+                        <button id="btn-xpath-action" class="btn btn-xs" data-testid="btn-xpath-action" aria-label="Trigger XPath Action">Click Sibling 2</button>
                       </div>
                     </div>
                   </div>
@@ -295,8 +295,8 @@
             <p class="card-desc">Practise waiting for elements to appear/disappear, text changes, a counter, and dynamically injected content.</p>
             <div class="playground dynamic-playground">
               <div class="btn-group">
-                <button id="btn-trigger-dynamic" class="btn btn-primary" data-testid="btn-trigger-dynamic">Trigger Dynamic Elements</button>
-                <button id="btn-trigger-text" class="btn btn-secondary" data-testid="btn-trigger-text">Change Output Text</button>
+                <button id="btn-trigger-dynamic" class="btn btn-primary" data-testid="btn-trigger-dynamic" aria-label="Show Dynamic Content">Trigger Dynamic Elements</button>
+                <button id="btn-trigger-text" class="btn btn-secondary" data-testid="btn-trigger-text" aria-label="Change Text Content">Change Output Text</button>
               </div>
               <div class="dynamic-display card-subsection">
                 <div id="dynamic-element-container" class="element-box">
@@ -343,7 +343,7 @@
                   </div>
                   <div class="progress-actions" style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem;">
                     <span id="status-progress" class="progress-text" data-testid="status-progress">0%</span>
-                    <button id="btn-start-progress" class="btn btn-xs btn-primary" data-testid="btn-start-progress">Start Progress</button>
+                    <button id="btn-start-progress" class="btn btn-xs btn-primary" data-testid="btn-start-progress" aria-label="Start Progress Bar">Start Progress</button>
                   </div>
                 </div>
               </div>
@@ -352,7 +352,7 @@
                 <h3>⚡ AJAX Delay Simulation</h3>
                 <div class="ajax-section">
                   <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-                    <button id="btn-trigger-ajax" class="btn btn-secondary" data-testid="btn-trigger-ajax">Call API Endpoint</button>
+                    <button id="btn-trigger-ajax" class="btn btn-secondary" data-testid="btn-trigger-ajax" aria-label="Trigger AJAX Request">Call API Endpoint</button>
                     <div id="status-ajax" class="status-value pending" data-testid="status-ajax">No request sent</div>
                   </div>
                 </div>
@@ -369,7 +369,7 @@
             <p class="card-desc">Practise reading rows, sorting by name, filtering with search, and paginating (page size 3).</p>
             <div class="playground table-playground">
               <div class="table-controls">
-                <input type="text" id="table-search" class="form-control search-control" data-testid="table-search" placeholder="Search table...">
+                <input type="text" id="table-search" class="form-control search-control" data-testid="table-search" placeholder="Search table..." aria-label="Search Table">
               </div>
               <div class="table-wrapper">
                 <table class="practice-table" id="practice-table" data-testid="practice-table">
@@ -387,9 +387,9 @@
                 </table>
               </div>
               <div class="table-pagination">
-                <button id="btn-prev-page" class="btn btn-xs btn-outline" data-testid="btn-prev-page">Previous</button>
+                <button id="btn-prev-page" class="btn btn-xs btn-outline" data-testid="btn-prev-page" aria-label="Previous Page">Previous</button>
                 <span id="table-page-info" class="page-info" data-testid="table-page-info">Page 1 of 3</span>
-                <button id="btn-next-page" class="btn btn-xs btn-outline" data-testid="btn-next-page">Next</button>
+                <button id="btn-next-page" class="btn btn-xs btn-outline" data-testid="btn-next-page" aria-label="Next Page">Next</button>
               </div>
             </div>
           </section>
@@ -403,10 +403,10 @@
             <p class="card-desc">Practise handling native JS dialogs: alert, confirm and prompt.</p>
             <div class="playground alert-playground">
               <div class="btn-group">
-                <button id="btn-alert" class="btn btn-outline" data-testid="btn-alert">Trigger Alert</button>
-                <button id="btn-confirm" class="btn btn-outline" data-testid="btn-confirm">Trigger Confirm</button>
-                <button id="btn-prompt" class="btn btn-outline" data-testid="btn-prompt">Trigger Prompt</button>
-                <button id="btn-custom-alert" class="btn btn-primary" data-testid="btn-custom-alert">Trigger HTML Alert</button>
+                <button id="btn-alert" class="btn btn-outline" data-testid="btn-alert" aria-label="Show Native Alert">Trigger Alert</button>
+                <button id="btn-confirm" class="btn btn-outline" data-testid="btn-confirm" aria-label="Show Native Confirm Dialog">Trigger Confirm</button>
+                <button id="btn-prompt" class="btn btn-outline" data-testid="btn-prompt" aria-label="Show Native Prompt Dialog">Trigger Prompt</button>
+                <button id="btn-custom-alert" class="btn btn-primary" data-testid="btn-custom-alert" aria-label="Show Custom Alert">Trigger HTML Alert</button>
               </div>
               
               <!-- Custom HTML Alert Modal -->
@@ -414,7 +414,7 @@
                 <div class="custom-alert-card">
                   <h3>Interactive Notice</h3>
                   <p>This is a custom CSS-styled alert dialog block inside the DOM tree.</p>
-                  <button id="btn-close-custom-alert" class="btn btn-xs btn-primary" data-testid="btn-close-custom-alert">Acknowledge</button>
+                  <button id="btn-close-custom-alert" class="btn btn-xs btn-primary" data-testid="btn-close-custom-alert" aria-label="Close Custom Alert">Acknowledge</button>
                 </div>
               </div>
             </div>
@@ -433,8 +433,8 @@
             <p class="card-desc">Practise opening a modal, closing via the X or close button, and closing by clicking the overlay.</p>
             <div class="playground modal-playground">
               <div class="btn-group">
-                <button id="btn-open-modal" class="btn btn-primary" data-testid="btn-open-modal">Open Custom Modal</button>
-                <button id="btn-open-dialog" class="btn btn-secondary" data-testid="btn-open-dialog">Open HTML5 Dialog</button>
+                <button id="btn-open-modal" class="btn btn-primary" data-testid="btn-open-modal" aria-label="Open Modal">Open Custom Modal</button>
+                <button id="btn-open-dialog" class="btn btn-secondary" data-testid="btn-open-dialog" aria-label="Open Dialog">Open HTML5 Dialog</button>
               </div>
 
               <!-- CSS Modal Overlay -->
@@ -448,7 +448,7 @@
                     <p>This modal container sits in the top layer of the DOM layout. You can close it using the close button, the X icon, or by clicking the background shadow overlay.</p>
                   </div>
                   <div class="modal-footer">
-                    <button id="btn-modal-close" class="btn btn-xs btn-secondary" data-testid="btn-modal-close">Close</button>
+                    <button id="btn-modal-close" class="btn btn-xs btn-secondary" data-testid="btn-modal-close" aria-label="Close Modal">Close</button>
                   </div>
                 </div>
               </div>
@@ -458,7 +458,7 @@
                 <h3>Native Dialog Element</h3>
                 <p>This is a native HTML5 dialog element rendered using <code>dialog.showModal()</code>.</p>
                 <div class="dialog-footer">
-                  <button id="btn-dialog-close" class="btn btn-xs btn-secondary" data-testid="btn-dialog-close">Close Dialog</button>
+                  <button id="btn-dialog-close" class="btn btn-xs btn-secondary" data-testid="btn-dialog-close" aria-label="Close Dialog">Close Dialog</button>
                 </div>
               </dialog>
             </div>
@@ -574,7 +574,7 @@
               <div class="upload-area" id="drop-zone-upload" data-testid="drop-zone-upload">
                 <p>Drag and drop a file here, or click to browse</p>
                 <input type="file" id="file-upload-input" class="file-input-hidden" data-testid="file-upload-input" aria-label="File upload input">
-                <button type="button" id="btn-browse-file" class="btn btn-xs btn-secondary" data-testid="btn-browse-file">Browse File</button>
+                <button type="button" id="btn-browse-file" class="btn btn-xs btn-secondary" data-testid="btn-browse-file" aria-label="Browse File">Browse File</button>
               </div>
             </div>
             <div class="status-panel">
@@ -624,10 +624,10 @@
 
               <!-- Element covered by overlay -->
               <div class="covered-container">
-                <button id="btn-covered" class="btn btn-outline" data-testid="btn-covered">Click Cover Target</button>
+                <button id="btn-covered" class="btn btn-outline" data-testid="btn-covered" aria-label="Covered Button">Click Cover Target</button>
                 <div id="overlay-blocker" class="blocker-overlay" data-testid="overlay-blocker">Cover Block Active</div>
               </div>
-              <button id="btn-remove-blocker" class="btn btn-xs btn-secondary" data-testid="btn-remove-blocker">Remove Cover</button>
+              <button id="btn-remove-blocker" class="btn btn-xs btn-secondary" data-testid="btn-remove-blocker" aria-label="Remove Overlapping Blocker">Remove Cover</button>
             </div>
             <div class="status-panel">
               <span class="status-label">Visibility Status:</span>
@@ -702,13 +702,13 @@
               <div id="auth-login-box" class="auth-box">
                 <div class="form-group">
                   <label for="auth-username">Username</label>
-                  <input type="text" id="auth-username" class="form-control" data-testid="auth-username" placeholder="Username">
+                  <input type="text" id="auth-username" class="form-control" data-testid="auth-username" placeholder="Username" aria-label="Username">
                 </div>
                 <div class="form-group">
                   <label for="auth-password">Password</label>
-                  <input type="password" id="auth-password" class="form-control" data-testid="auth-password" placeholder="Password">
+                  <input type="password" id="auth-password" class="form-control" data-testid="auth-password" placeholder="Password" aria-label="Password">
                 </div>
-                <button id="btn-login" class="btn btn-primary" data-testid="btn-login">Log In</button>
+                <button id="btn-login" class="btn btn-primary" data-testid="btn-login" aria-label="Log In">Log In</button>
               </div>
 
               <!-- Protected Dashboard -->
@@ -718,7 +718,7 @@
                 <div class="token-container">
                   Session Token: <code id="auth-session-token" data-testid="session-token">AUTH_SUCCESS_TOKEN_998877</code>
                 </div>
-                <button id="btn-logout" class="btn btn-xs btn-secondary" data-testid="btn-logout">Log Out</button>
+                <button id="btn-logout" class="btn btn-xs btn-secondary" data-testid="btn-logout" aria-label="Log Out">Log Out</button>
               </div>
             </div>
             <div class="status-panel">
@@ -738,7 +738,7 @@
               <div class="stale-container" id="stale-container">
                 <span id="stale-target" class="stale-target-label" data-testid="stale-target">Stale target instance #0</span>
               </div>
-              <button id="btn-trigger-stale" class="btn btn-secondary" data-testid="btn-trigger-stale">Refresh Target Node</button>
+              <button id="btn-trigger-stale" class="btn btn-secondary" data-testid="btn-trigger-stale" aria-label="Trigger Stale Element">Refresh Target Node</button>
             </div>
           </section>
 
@@ -751,13 +751,13 @@
             <p class="card-desc">Practise adding and removing items and asserting on the changing list length.</p>
             <div class="playground dynamic-list-playground">
               <div class="list-controls">
-                <input type="text" id="input-list-item" class="form-control list-item-control" data-testid="input-list-item" placeholder="Add list item...">
-                <button id="btn-add-list-item" class="btn btn-primary btn-xs" data-testid="btn-add-list-item">Add Item</button>
+                <input type="text" id="input-list-item" class="form-control list-item-control" data-testid="input-list-item" placeholder="Add list item..." aria-label="Add List Item">
+                <button id="btn-add-list-item" class="btn btn-primary btn-xs" data-testid="btn-add-list-item" aria-label="Add Item to List">Add Item</button>
               </div>
               <ul class="dynamic-practice-list" id="dynamic-practice-list" data-testid="dynamic-practice-list">
                 <!-- Initial Seed Items -->
-                <li data-testid="list-item-0">First item <button class="btn-remove-item" data-id="0">Remove</button></li>
-                <li data-testid="list-item-1">Second item <button class="btn-remove-item" data-id="1">Remove</button></li>
+                <li data-testid="list-item-0">First item <button class="btn-remove-item" data-id="0" data-testid="btn-remove-item-0" aria-label="Remove First item">Remove</button></li>
+                <li data-testid="list-item-1">Second item <button class="btn-remove-item" data-id="1" data-testid="btn-remove-item-1" aria-label="Remove Second item">Remove</button></li>
               </ul>
             </div>
           </section>
@@ -787,7 +787,7 @@
             </div>
             <p class="card-desc">Practise handling flaky outcomes: this button passes or fails roughly 50/50 each run.</p>
             <div class="playground flaky-playground">
-              <button id="btn-trigger-flaky" class="btn btn-outline" data-testid="btn-trigger-flaky">Execute Operation</button>
+              <button id="btn-trigger-flaky" class="btn btn-outline" data-testid="btn-trigger-flaky" aria-label="Trigger Flaky Action">Execute Operation</button>
             </div>
             <div class="status-panel">
               <span class="status-label">Server Status:</span>
@@ -805,7 +805,7 @@
             <div class="playground keyboard-playground">
               <div class="form-group">
                 <label for="keyboard-input">Keyboard Input Target</label>
-                <input type="text" id="keyboard-input" class="form-control" data-testid="keyboard-input" placeholder="Click and type keys...">
+                <input type="text" id="keyboard-input" class="form-control" data-testid="keyboard-input" placeholder="Click and type keys..." aria-label="Keyboard Actions Input">
               </div>
               <div class="keyboard-stats status-grid">
                 <div>Last key: <span id="status-keyboard-key" class="status-value pending" data-testid="status-keyboard-key">None</span></div>
@@ -839,21 +839,21 @@
             <div class="playground date-playground">
               <div class="form-group">
                 <label for="date-picker-standard">Standard HTML5 Date Input</label>
-                <input type="date" id="date-picker-standard" class="form-control select-control" data-testid="date-picker-standard">
+                <input type="date" id="date-picker-standard" class="form-control select-control" data-testid="date-picker-standard" aria-label="Standard Date Picker">
               </div>
 
               <div class="custom-calendar-picker card-subsection">
                 <h3>Custom Calendar Dialog Picker</h3>
                 <div class="calendar-trigger-container">
-                  <button type="button" id="btn-custom-date-trigger" class="btn btn-outline" data-testid="btn-custom-date-trigger">📅 Open Calendar</button>
+                  <button type="button" id="btn-custom-date-trigger" class="btn btn-outline" data-testid="btn-custom-date-trigger" aria-label="Open Calendar">📅 Open Calendar</button>
                   <span id="cal-selected-display" class="cal-selected-display" data-testid="cal-selected-display" style="display:none;"></span>
                 </div>
                 <!-- Custom Date Picker Dropdown -->
                 <div class="custom-calendar-dropdown" id="custom-calendar-dropdown" style="display: none;" data-testid="custom-calendar-dropdown">
                   <div class="calendar-header">
-                    <button id="btn-calendar-prev" class="btn-cal-nav" data-testid="btn-calendar-prev">&#8249;</button>
+                    <button id="btn-calendar-prev" class="btn-cal-nav" data-testid="btn-calendar-prev" aria-label="Previous Month">&#8249;</button>
                     <span id="calendar-month-year" data-testid="calendar-month-year">July 2026</span>
-                    <button id="btn-calendar-next" class="btn-cal-nav" data-testid="btn-calendar-next">&#8250;</button>
+                    <button id="btn-calendar-next" class="btn-cal-nav" data-testid="btn-calendar-next" aria-label="Next Month">&#8250;</button>
                   </div>
                   <table class="calendar-grid" role="grid">
                     <thead>
@@ -866,8 +866,8 @@
                     </tbody>
                   </table>
                   <div class="calendar-footer">
-                    <button type="button" id="btn-cal-today" class="btn-cal-today" data-testid="btn-cal-today">Today</button>
-                    <button type="button" id="btn-cal-clear" class="btn-cal-clear" data-testid="btn-cal-clear">Clear</button>
+                    <button type="button" id="btn-cal-today" class="btn-cal-today" data-testid="btn-cal-today" aria-label="Select Today">Today</button>
+                    <button type="button" id="btn-cal-clear" class="btn-cal-clear" data-testid="btn-cal-clear" aria-label="Clear Selected Date">Clear</button>
                   </div>
                 </div>
               </div>
@@ -938,16 +938,16 @@
                         <td>Item Alpha</td>
                         <td><span class="badge" data-badge="alpha">ID-ALPHA</span></td>
                         <td>
-                          <button class="btn btn-xs btn-outline btn-complex-action" data-row-id="alpha-btn-1" data-testid="complex-alpha-btn-1">View</button>
-                          <button class="btn btn-xs btn-primary btn-complex-action" data-row-id="alpha-btn-2" data-testid="complex-alpha-btn-2">Edit</button>
+                          <button class="btn btn-xs btn-outline btn-complex-action" data-row-id="alpha-btn-1" data-testid="complex-alpha-btn-1" aria-label="View Item Alpha">View</button>
+                          <button class="btn btn-xs btn-primary btn-complex-action" data-row-id="alpha-btn-2" data-testid="complex-alpha-btn-2" aria-label="Edit Item Alpha">Edit</button>
                         </td>
                       </tr>
                       <tr data-row="row-2">
                         <td>Item Beta</td>
                         <td><span class="badge" data-badge="beta">ID-BETA</span></td>
                         <td>
-                          <button class="btn btn-xs btn-outline btn-complex-action" data-row-id="beta-btn-1" data-testid="complex-beta-btn-1">View</button>
-                          <button class="btn btn-xs btn-primary btn-complex-action" data-row-id="beta-btn-2" data-testid="complex-beta-btn-2">Edit</button>
+                          <button class="btn btn-xs btn-outline btn-complex-action" data-row-id="beta-btn-1" data-testid="complex-beta-btn-1" aria-label="View Item Beta">View</button>
+                          <button class="btn btn-xs btn-primary btn-complex-action" data-row-id="beta-btn-2" data-testid="complex-beta-btn-2" aria-label="Edit Item Beta">Edit</button>
                         </td>
                       </tr>
                     </tbody>
@@ -1039,14 +1039,14 @@
               </div>
               <div id="wizard-panel-1" class="wizard-panel" data-testid="wizard-panel-1">
                 <h3 class="wizard-title">Step 1: Personal Info</h3>
-                <div class="form-group"><label>First Name<input type="text" id="wiz-fname" class="form-control" data-testid="wiz-fname" placeholder="First name"></label></div>
-                <div class="form-group"><label>Last Name<input type="text" id="wiz-lname" class="form-control" data-testid="wiz-lname" placeholder="Last name"></label></div>
+                <div class="form-group"><label>First Name<input type="text" id="wiz-fname" class="form-control" data-testid="wiz-fname" placeholder="First name" aria-label="First Name"></label></div>
+                <div class="form-group"><label>Last Name<input type="text" id="wiz-lname" class="form-control" data-testid="wiz-lname" placeholder="Last name" aria-label="Last Name"></label></div>
               </div>
               <div id="wizard-panel-2" class="wizard-panel" data-testid="wizard-panel-2" style="display:none;">
                 <h3 class="wizard-title">Step 2: Account Setup</h3>
-                <div class="form-group"><label>Username<input type="text" id="wiz-username" class="form-control" data-testid="wiz-username" placeholder="Choose a username"></label></div>
+                <div class="form-group"><label>Username<input type="text" id="wiz-username" class="form-control" data-testid="wiz-username" placeholder="Choose a username" aria-label="Choose Username"></label></div>
                 <div class="form-group"><label>Role
-                  <select id="wiz-role" class="form-control select-control" data-testid="wiz-role">
+                  <select id="wiz-role" class="form-control select-control" data-testid="wiz-role" aria-label="Select Role">
                     <option value="">Select role</option>
                     <option value="qa">QA Engineer</option>
                     <option value="sdet">SDET</option>
@@ -1059,9 +1059,9 @@
                 <div id="wizard-review" class="wizard-review" data-testid="wizard-review"></div>
               </div>
               <div class="wizard-buttons btn-group" style="margin-top:1rem;">
-                <button id="wiz-back" class="btn btn-secondary" data-testid="wiz-back" style="display:none;">← Back</button>
-                <button id="wiz-next" class="btn btn-primary" data-testid="wiz-next">Next →</button>
-                <button id="wiz-submit" class="btn btn-primary" data-testid="wiz-submit" style="display:none;">✓ Submit</button>
+                <button id="wiz-back" class="btn btn-secondary" data-testid="wiz-back" style="display:none;" aria-label="Wizard Back">← Back</button>
+                <button id="wiz-next" class="btn btn-primary" data-testid="wiz-next" aria-label="Wizard Next">Next →</button>
+                <button id="wiz-submit" class="btn btn-primary" data-testid="wiz-submit" style="display:none;" aria-label="Wizard Submit">✓ Submit</button>
               </div>
             </div>
             <div class="status-panel">
@@ -1086,7 +1086,7 @@
                 <div id="color-preview" class="color-preview" data-testid="color-preview" style="background:#3b82f6;"></div>
                 <code id="color-hex" class="color-hex" data-testid="color-hex">#3b82f6</code>
               </div>
-              <button id="btn-apply-color" class="btn btn-primary" data-testid="btn-apply-color" style="margin-top:0.75rem;">Apply Color</button>
+              <button id="btn-apply-color" class="btn btn-primary" data-testid="btn-apply-color" style="margin-top:0.75rem;" aria-label="Apply Selected Color">Apply Color</button>
             </div>
             <div class="status-panel">
               <span class="status-label">Selected color:</span>
@@ -1120,7 +1120,7 @@
   <iframe
     id="inner-iframe"
     data-testid="inner-iframe"
-    srcdoc="<!DOCTYPE html><html><head><style>body{margin:0;padding:12px;font-family:sans-serif;background:#05071a;color:#94a3b8;} h4{color:#34d399;margin:0 0 8px;font-size:13px;} input{width:100%;padding:6px 10px;background:#0f1530;border:1px solid #2d3a6e;border-radius:4px;color:#e8eaf6;font-size:13px;box-sizing:border-box;} button{margin-top:8px;padding:6px 14px;background:#3b82f6;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:12px;} #inner-status{margin-top:8px;font-size:12px;color:#10b981;}</style></head><body><h4>Inner Frame (Level 2)</h4><input type=&quot;text&quot; id=&quot;nested-input&quot; data-testid=&quot;nested-input&quot; placeholder=&quot;Type something here&quot;><br><button id=&quot;nested-btn&quot; data-testid=&quot;nested-btn&quot; onclick=&quot;document.getElementById(&apos;inner-status&apos;).textContent=&apos;Clicked: &apos;+document.getElementById(&apos;nested-input&apos;).value&quot;>Submit</button><div id=&quot;inner-status&quot; data-testid=&quot;nested-status&quot;></div></body></html>"
+    srcdoc="<!DOCTYPE html><html><head><style>body{margin:0;padding:12px;font-family:sans-serif;background:#05071a;color:#94a3b8;} h4{color:#34d399;margin:0 0 8px;font-size:13px;} input{width:100%;padding:6px 10px;background:#0f1530;border:1px solid #2d3a6e;border-radius:4px;color:#e8eaf6;font-size:13px;box-sizing:border-box;} button{margin-top:8px;padding:6px 14px;background:#3b82f6;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:12px;} #inner-status{margin-top:8px;font-size:12px;color:#10b981;}</style></head><body><h4>Inner Frame (Level 2)</h4><input type=&quot;text&quot; id=&quot;nested-input&quot; data-testid=&quot;nested-input&quot; placeholder=&quot;Type something here&quot; aria-label=&quot;Nested Iframe Input&quot;><br><button id=&quot;nested-btn&quot; data-testid=&quot;nested-btn&quot; aria-label=&quot;Nested Iframe Submit&quot; onclick=&quot;document.getElementById(&apos;inner-status&apos;).textContent=&apos;Clicked: &apos;+document.getElementById(&apos;nested-input&apos;).value&quot;>Submit</button><div id=&quot;inner-status&quot; data-testid=&quot;nested-status&quot;></div></body></html>"
   ></iframe>
 </body>
 </html>'
@@ -1157,7 +1157,7 @@
                     <td>$142.00</td>
                     <td><span class="tag tag-success" data-testid="status-1">Shipped</span></td>
                     <td>
-                      <button class="btn btn-xs btn-outline nested-expand-btn" data-testid="expand-btn-1" data-row="1">▶ Expand</button>
+                      <button class="btn btn-xs btn-outline nested-expand-btn" data-testid="expand-btn-1" data-row="1" aria-label="Expand Row 1">▶ Expand</button>
                     </td>
                   </tr>
                   <tr id="nested-detail-1" class="nested-detail-row" data-testid="nested-detail-1" style="display:none;">
@@ -1177,7 +1177,7 @@
                     <td>$78.50</td>
                     <td><span class="tag tag-pending" data-testid="status-2">Processing</span></td>
                     <td>
-                      <button class="btn btn-xs btn-outline nested-expand-btn" data-testid="expand-btn-2" data-row="2">▶ Expand</button>
+                      <button class="btn btn-xs btn-outline nested-expand-btn" data-testid="expand-btn-2" data-row="2" aria-label="Expand Row 2">▶ Expand</button>
                     </td>
                   </tr>
                   <tr id="nested-detail-2" class="nested-detail-row" data-testid="nested-detail-2" style="display:none;">
@@ -1197,7 +1197,7 @@
                     <td>$219.99</td>
                     <td><span class="tag tag-error" data-testid="status-3">Cancelled</span></td>
                     <td>
-                      <button class="btn btn-xs btn-outline nested-expand-btn" data-testid="expand-btn-3" data-row="3">▶ Expand</button>
+                      <button class="btn btn-xs btn-outline nested-expand-btn" data-testid="expand-btn-3" data-row="3" aria-label="Expand Row 3">▶ Expand</button>
                     </td>
                   </tr>
                   <tr id="nested-detail-3" class="nested-detail-row" data-testid="nested-detail-3" style="display:none;">
@@ -1228,9 +1228,9 @@
             <p class="card-desc">Practise page-level interactions: changing document title, reloading/refresh tracking, and handling multiple pages.</p>
             <div class="playground page-ops-playground">
               <div class="btn-group">
-                <button id="btn-change-title" class="btn btn-outline" data-testid="btn-change-title">Change Title</button>
-                <button id="btn-simulate-refresh" class="btn btn-outline" data-testid="btn-simulate-refresh">Simulate Refresh</button>
-                <button id="btn-open-newpage" class="btn btn-outline" data-testid="btn-open-newpage">Open New Page</button>
+                <button id="btn-change-title" class="btn btn-outline" data-testid="btn-change-title" aria-label="Change Page Title">Change Title</button>
+                <button id="btn-simulate-refresh" class="btn btn-outline" data-testid="btn-simulate-refresh" aria-label="Simulate Page Refresh">Simulate Refresh</button>
+                <button id="btn-open-newpage" class="btn btn-outline" data-testid="btn-open-newpage" aria-label="Open New Window">Open New Page</button>
               </div>
               <div class="info-box" style="margin-top: 1rem;">
                 <div><strong>Current Title:</strong> <span id="current-title-val" data-testid="current-title-val">Automation Playground</span></div>
@@ -1293,7 +1293,7 @@
             <p class="card-desc">Practise waiting for asynchronous input: the search query triggers matching results after a 500ms pause.</p>
             <div class="playground search-playground">
               <div class="form-group" style="position: relative;">
-                <input type="text" id="debounce-search-input" class="form-control" placeholder="Search tech stack (e.g. Playwright, Vite, TS)..." data-testid="debounce-search-input">
+                <input type="text" id="debounce-search-input" class="form-control" placeholder="Search tech stack (e.g. Playwright, Vite, TS)..." data-testid="debounce-search-input" aria-label="Debounced Search Input">
                 <span id="search-spinner" style="position: absolute; right: 12px; top: 12px; display: none; color: var(--secondary);">⚡ Typing...</span>
               </div>
               <ul id="debounce-search-results" class="autocomplete-list" style="position: relative; box-shadow: none; border-radius: 6px; margin-top: 0.5rem;">
@@ -1315,7 +1315,7 @@
             <p class="card-desc">Practise network interception: typing each character fires a separate simulated API request instantly.</p>
             <div class="playground api-playground">
               <div class="form-group">
-                <input type="text" id="api-sim-input" class="form-control" placeholder="Type fast to trigger multiple API requests..." data-testid="api-sim-input">
+                <input type="text" id="api-sim-input" class="form-control" placeholder="Type fast to trigger multiple API requests..." data-testid="api-sim-input" aria-label="API Simulation Input">
               </div>
               <div class="api-log-box" style="margin-top: 1rem; border: 1px solid var(--border-color); border-radius: 6px; padding: 1rem; max-height: 150px; overflow-y: auto; background: var(--bg-main); font-family: monospace; font-size: 0.85rem;">
                 <div style="color: var(--text-secondary); margin-bottom: 0.5rem; font-weight: bold;">Simulated Network Request Log:</div>
@@ -1335,7 +1335,7 @@
   </div>
 
   <!-- Scroll to Top Button -->
-  <button id="scroll-to-top" class="scroll-to-top-btn" aria-label="Scroll to top" title="Back to top">
+  <button id="scroll-to-top" class="scroll-to-top-btn" data-testid="scroll-to-top" aria-label="Scroll to top" title="Back to top">
     ↑
   </button>
 
