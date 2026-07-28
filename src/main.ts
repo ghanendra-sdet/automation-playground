@@ -1267,10 +1267,11 @@ function renderCalendar() {
 
   let daysHtml = '';
   let row = '<tr>';
-  
+  const pad = (n: number) => String(n).padStart(2, '0');
+
   // Fill initial empty cells
   for (let i = 0; i < firstDay; i++) {
-    row += '<td class="calendar-day empty-day"></td>';
+    row += '<td><span class="calendar-day empty-day"></span></td>';
   }
 
   let currentCol = firstDay;
@@ -1281,19 +1282,20 @@ function renderCalendar() {
       row = '<tr>';
       currentCol = 0;
     }
-    
-    row += `<td class="calendar-day" data-day="${day}">${day}</td>`;
+
+    const isoDate = `${calendarYear}-${pad(calendarMonth + 1)}-${pad(day)}`;
+    row += `<td><span class="calendar-day" data-day="${day}" data-date="${isoDate}">${day}</span></td>`;
     currentCol++;
   }
 
   // Fill remaining empty cells
   if (currentCol > 0 && currentCol < 7) {
     for (let i = currentCol; i < 7; i++) {
-      row += '<td class="calendar-day empty-day"></td>';
+      row += '<td><span class="calendar-day empty-day"></span></td>';
     }
-    row += '</tr>';
-    daysHtml += row;
   }
+  row += '</tr>';
+  daysHtml += row;
 
   calendarDaysBody.innerHTML = daysHtml;
 
