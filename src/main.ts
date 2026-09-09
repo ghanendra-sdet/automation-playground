@@ -48,6 +48,16 @@ const sections = [
   { id: 'section-40', name: 'Infinite Scroll' },
   { id: 'section-41', name: 'Search with Debounce' },
   { id: 'section-42', name: 'Character API Simulation' },
+  { id: 'section-43', name: 'Tabs' },
+  { id: 'section-44', name: 'Accordion' },
+  { id: 'section-45', name: 'Toggle / Switch' },
+  { id: 'section-46', name: 'Toast Notifications' },
+  { id: 'section-47', name: 'Dependent Dropdowns' },
+  { id: 'section-48', name: 'OTP / Verification Code' },
+  { id: 'section-49', name: 'Rich Text Editor' },
+  { id: 'section-50', name: 'Tree View' },
+  { id: 'section-51', name: 'Responsive Navigation' },
+  { id: 'section-52', name: 'Popover' },
 ];
 
 const sidebarList = document.getElementById('sidebar-list');
@@ -131,28 +141,146 @@ document.documentElement.setAttribute('data-theme', savedTheme);
 // ==========================================================================
 const basicForm = document.getElementById('basic-form') as HTMLFormElement;
 const formStatus = document.getElementById('form-status');
+
+// --- Inline field validation ---
+function setFieldError(inputId: string, errId: string, message: string) {
+  const input = document.getElementById(inputId);
+  const err = document.getElementById(errId);
+  if (err) err.textContent = message;
+  if (input) input.classList.toggle('invalid', Boolean(message));
+  input?.classList.toggle('valid', !message && (input as HTMLInputElement).value.length > 0);
+}
+
+function validateBasicForm(): boolean {
+  const nameInput = document.getElementById('form-name') as HTMLInputElement;
+  const emailInput = document.getElementById('form-email') as HTMLInputElement;
+  const passwordInput = document.getElementById('form-password') as HTMLInputElement;
+  const confirmInput = document.getElementById('form-confirm-password') as HTMLInputElement;
+  const phoneInput = document.getElementById('form-phone') as HTMLInputElement;
+
+  let valid = true;
+
+  if (nameInput.value.trim().length < 2) {
+    setFieldError('form-name', 'err-form-name', 'Name must be at least 2 characters.');
+    valid = false;
+  } else {
+    setFieldError('form-name', 'err-form-name', '');
+  }
+
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailPattern.test(emailInput.value)) {
+    setFieldError('form-email', 'err-form-email', 'Enter a valid email address.');
+    valid = false;
+  } else {
+    setFieldError('form-email', 'err-form-email', '');
+  }
+
+  if (passwordInput.value.length < 8) {
+    setFieldError('form-password', 'err-form-password', 'Password must be at least 8 characters.');
+    valid = false;
+  } else {
+    setFieldError('form-password', 'err-form-password', '');
+  }
+
+  if (confirmInput.value !== passwordInput.value || confirmInput.value === '') {
+    setFieldError('form-confirm-password', 'err-form-confirm-password', 'Passwords do not match.');
+    valid = false;
+  } else {
+    setFieldError('form-confirm-password', 'err-form-confirm-password', '');
+  }
+
+  const phonePattern = /^\+?[0-9]{10,15}$/;
+  if (!phonePattern.test(phoneInput.value)) {
+    setFieldError('form-phone', 'err-form-phone', 'Enter a valid phone number (10-15 digits, optional leading +).');
+    valid = false;
+  } else {
+    setFieldError('form-phone', 'err-form-phone', '');
+  }
+
+  return valid;
+}
+
+['form-name', 'form-email', 'form-password', 'form-confirm-password', 'form-phone'].forEach((id) => {
+  document.getElementById(id)?.addEventListener('input', validateBasicForm);
+});
+
+// --- Password strength meter ---
+const passwordInputEl = document.getElementById('form-password') as HTMLInputElement;
+const strengthBar = document.getElementById('strength-bar');
+const strengthLabel = document.getElementById('strength-label');
+
+function scorePassword(pw: string): { score: number; label: string; className: string } {
+  if (!pw) return { score: 0, label: 'Enter a password', className: '' };
+  let score = 0;
+  if (pw.length >= 8) score++;
+  if (pw.length >= 12) score++;
+  if (/[A-Z]/.test(pw)) score++;
+  if (/[0-9]/.test(pw)) score++;
+  if (/[^A-Za-z0-9]/.test(pw)) score++;
+
+  if (score <= 1) return { score, label: 'Weak', className: 'strength-weak' };
+  if (score <= 3) return { score, label: 'Medium', className: 'strength-medium' };
+  return { score, label: 'Strong', className: 'strength-strong' };
+}
+
+passwordInputEl?.addEventListener('input', () => {
+  const { label, className } = scorePassword(passwordInputEl.value);
+  if (strengthBar) strengthBar.className = `strength-bar ${className}`;
+  if (strengthLabel) {
+    strengthLabel.textContent = label;
+    strengthLabel.setAttribute('data-testid', 'strength-label');
+  }
+});
+
+// --- Conditionally-enabled coupon field ---
+const hasCouponCheckbox = document.getElementById('form-has-coupon') as HTMLInputElement;
+const couponInput = document.getElementById('form-coupon-code') as HTMLInputElement;
+hasCouponCheckbox?.addEventListener('change', () => {
+  if (couponInput) {
+    couponInput.disabled = !hasCouponCheckbox.checked;
+    if (!hasCouponCheckbox.checked) couponInput.value = '';
+  }
+});
+
 if (basicForm && formStatus) {
   basicForm.addEventListener('submit', (e) => {
     e.preventDefault();
     const nameInput = document.getElementById('form-name') as HTMLInputElement;
     const emailInput = document.getElementById('form-email') as HTMLInputElement;
-    const passwordInput = document.getElementById('form-password') as HTMLInputElement;
-    const phoneInput = document.getElementById('form-phone') as HTMLInputElement;
-    const bioInput = document.getElementById('form-bio') as HTMLTextAreaElement;
 
-    if (!nameInput.value || !emailInput.value || !passwordInput.value || !phoneInput.value || !bioInput.value) {
-      formStatus.textContent = 'Submission failed: Please fill all fields!';
+    if (!validateBasicForm()) {
+      formStatus.textContent = 'Submission failed: Please fix the highlighted fields.';
       formStatus.className = 'status-value error';
       return;
     }
 
-    formStatus.textContent = `Submitted successfully! Name: "${nameInput.value}", Email: "${emailInput.value}"`;
-    formStatus.className = 'status-value success';
+    const submitBtn = document.getElementById('form-submit') as HTMLButtonElement;
+    const originalLabel = submitBtn.textContent;
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Submitting...';
+    formStatus.textContent = 'Submitting...';
+    formStatus.className = 'status-value pending';
+
+    setTimeout(() => {
+      submitBtn.disabled = false;
+      submitBtn.textContent = originalLabel;
+      formStatus.textContent = `Submitted successfully! Name: "${nameInput.value}", Email: "${emailInput.value}"`;
+      formStatus.className = 'status-value success';
+    }, 700);
   });
 
   basicForm.addEventListener('reset', () => {
     formStatus.textContent = 'Not submitted';
     formStatus.className = 'status-value pending';
+    ['form-name', 'form-email', 'form-password', 'form-confirm-password', 'form-phone'].forEach((id) => {
+      document.getElementById(id)?.classList.remove('invalid', 'valid');
+      const errId = `err-${id}`;
+      const err = document.getElementById(errId);
+      if (err) err.textContent = '';
+    });
+    if (strengthBar) strengthBar.className = 'strength-bar';
+    if (strengthLabel) strengthLabel.textContent = 'Enter a password';
+    if (couponInput) couponInput.disabled = true;
   });
 }
 
@@ -463,7 +591,7 @@ if (btnTriggerAjax && statusAjax) {
 // ==========================================================================
 // Challenge 08: Table Automation
 // ==========================================================================
-const tableData = [
+let tableData = [
   { id: 1, name: 'Automation Playground', role: 'Automation Architect', status: 'Active' },
   { id: 2, name: 'John Doe', role: 'QA Engineer', status: 'Inactive' },
   { id: 3, name: 'Alice Smith', role: 'SDET Manager', status: 'Active' },
@@ -473,31 +601,35 @@ const tableData = [
   { id: 7, name: 'Bruce Wayne', role: 'Quality Specialist', status: 'Inactive' },
   { id: 8, name: 'Clark Kent', role: 'Reporter / Auditor', status: 'Active' }
 ];
+const originalTableData = tableData.map((r) => ({ ...r }));
 
 let currentTablePage = 1;
 const tablePageSize = 3;
 let sortAsc = true;
 let searchQuery = '';
+const selectedRowIds = new Set<number>();
 
 const tableBody = document.getElementById('table-body');
 const searchInput = document.getElementById('table-search') as HTMLInputElement;
 const btnPrevPage = document.getElementById('btn-prev-page');
 const btnNextPage = document.getElementById('btn-next-page');
 const tablePageInfo = document.getElementById('table-page-info');
+const pageNumberList = document.getElementById('page-number-list');
 const thName = document.getElementById('th-name');
+const tableSelectAllCheckbox = document.getElementById('table-select-all') as HTMLInputElement;
+const bulkActionBar = document.getElementById('bulk-action-bar');
+const bulkSelectedCount = document.getElementById('bulk-selected-count');
+const btnBulkDelete = document.getElementById('btn-bulk-delete');
+const tableEditStatus = document.getElementById('table-edit-status');
+const btnTableReload = document.getElementById('btn-table-reload');
 
-function renderTable() {
-  if (!tableBody) return;
-
-  // Filter
-  let filtered = tableData.filter(
+function getFilteredSortedRows() {
+  const filtered = tableData.filter(
     (row) =>
       row.name.toLowerCase().includes(searchQuery) ||
       row.role.toLowerCase().includes(searchQuery) ||
       row.status.toLowerCase().includes(searchQuery)
   );
-
-  // Sort
   filtered.sort((a, b) => {
     const valA = a.name.toLowerCase();
     const valB = b.name.toLowerCase();
@@ -505,20 +637,32 @@ function renderTable() {
     if (valA > valB) return sortAsc ? 1 : -1;
     return 0;
   });
+  return filtered;
+}
 
+function updateBulkBar() {
+  if (!bulkActionBar || !bulkSelectedCount) return;
+  const count = selectedRowIds.size;
+  bulkActionBar.hidden = count === 0;
+  bulkSelectedCount.textContent = `${count} selected`;
+}
+
+function renderTable() {
+  if (!tableBody) return;
+
+  const filtered = getFilteredSortedRows();
   const totalPages = Math.ceil(filtered.length / tablePageSize) || 1;
   if (currentTablePage > totalPages) currentTablePage = totalPages;
 
-  // Pagination bounds
   const startIdx = (currentTablePage - 1) * tablePageSize;
   const endIdx = startIdx + tablePageSize;
   const pageData = filtered.slice(startIdx, endIdx);
 
-  // HTML render
   tableBody.innerHTML = pageData.map((row) => `
-    <tr>
+    <tr data-row-id="${row.id}">
+      <td><input type="checkbox" class="row-checkbox" data-testid="row-checkbox-${row.id}" aria-label="Select row ${row.id}" ${selectedRowIds.has(row.id) ? 'checked' : ''}></td>
       <td>${row.id}</td>
-      <td data-testid="table-cell-name">${row.name}</td>
+      <td class="editable-cell" data-testid="table-cell-name" data-row-id="${row.id}" title="Click to edit">${row.name}</td>
       <td>${row.role}</td>
       <td><span class="badge ${row.status === 'Active' ? 'badge-active' : 'badge-inactive'}">${row.status}</span></td>
     </tr>
@@ -527,13 +671,75 @@ function renderTable() {
   if (tablePageInfo) {
     tablePageInfo.textContent = `Page ${currentTablePage} of ${totalPages}`;
   }
+  if (btnPrevPage) (btnPrevPage as HTMLButtonElement).disabled = currentTablePage === 1;
+  if (btnNextPage) (btnNextPage as HTMLButtonElement).disabled = currentTablePage === totalPages;
 
-  if (btnPrevPage) {
-    (btnPrevPage as HTMLButtonElement).disabled = currentTablePage === 1;
+  if (pageNumberList) {
+    let pagesHtml = '';
+    for (let p = 1; p <= totalPages; p++) {
+      pagesHtml += `<button class="page-num-btn ${p === currentTablePage ? 'active' : ''}" data-page="${p}" data-testid="page-num-btn-${p}" aria-label="Go to page ${p}">${p}</button>`;
+    }
+    pageNumberList.innerHTML = pagesHtml;
+    pageNumberList.querySelectorAll('.page-num-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        currentTablePage = Number((btn as HTMLElement).dataset.page);
+        renderTable();
+      });
+    });
   }
-  if (btnNextPage) {
-    (btnNextPage as HTMLButtonElement).disabled = currentTablePage === totalPages;
+
+  if (tableSelectAllCheckbox) {
+    const pageIds = pageData.map((r) => r.id);
+    const allSelected = pageIds.length > 0 && pageIds.every((id) => selectedRowIds.has(id));
+    const someSelected = pageIds.some((id) => selectedRowIds.has(id));
+    tableSelectAllCheckbox.checked = allSelected;
+    tableSelectAllCheckbox.indeterminate = someSelected && !allSelected;
   }
+
+  tableBody.querySelectorAll('.row-checkbox').forEach((cb) => {
+    cb.addEventListener('change', (e) => {
+      const tr = (e.target as HTMLElement).closest('tr');
+      const id = Number(tr?.getAttribute('data-row-id'));
+      if ((e.target as HTMLInputElement).checked) selectedRowIds.add(id);
+      else selectedRowIds.delete(id);
+      updateBulkBar();
+      renderTable();
+    });
+  });
+
+  tableBody.querySelectorAll('.editable-cell').forEach((cell) => {
+    cell.addEventListener('click', () => startInlineEdit(cell as HTMLElement));
+  });
+
+  updateBulkBar();
+}
+
+function startInlineEdit(cell: HTMLElement) {
+  if (cell.querySelector('input')) return; // already editing
+  const rowId = Number(cell.dataset.rowId);
+  const currentValue = cell.textContent || '';
+  cell.innerHTML = `<input type="text" class="form-control inline-edit-input" data-testid="inline-edit-input-${rowId}" value="${currentValue}" aria-label="Edit name">`;
+  const input = cell.querySelector('input') as HTMLInputElement;
+  input.focus();
+  input.select();
+
+  const commit = (save: boolean) => {
+    if (save && input.value.trim()) {
+      const row = tableData.find((r) => r.id === rowId);
+      if (row) row.name = input.value.trim();
+      if (tableEditStatus) {
+        tableEditStatus.textContent = `Row ${rowId} name updated to "${input.value.trim()}"`;
+        tableEditStatus.className = 'status-value success';
+      }
+    }
+    renderTable();
+  };
+
+  input.addEventListener('blur', () => commit(true));
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') { e.preventDefault(); commit(true); }
+    if (e.key === 'Escape') { e.preventDefault(); commit(false); }
+  });
 }
 
 searchInput?.addEventListener('input', () => {
@@ -559,6 +765,53 @@ btnPrevPage?.addEventListener('click', () => {
 btnNextPage?.addEventListener('click', () => {
   currentTablePage++;
   renderTable();
+});
+
+tableSelectAllCheckbox?.addEventListener('change', () => {
+  const pageData = getFilteredSortedRows().slice(
+    (currentTablePage - 1) * tablePageSize,
+    (currentTablePage - 1) * tablePageSize + tablePageSize
+  );
+  if (tableSelectAllCheckbox.checked) {
+    pageData.forEach((r) => selectedRowIds.add(r.id));
+  } else {
+    pageData.forEach((r) => selectedRowIds.delete(r.id));
+  }
+  renderTable();
+});
+
+btnBulkDelete?.addEventListener('click', () => {
+  tableData = tableData.filter((r) => !selectedRowIds.has(r.id));
+  if (tableEditStatus) {
+    tableEditStatus.textContent = `Deleted ${selectedRowIds.size} row(s)`;
+    tableEditStatus.className = 'status-value success';
+  }
+  selectedRowIds.clear();
+  renderTable();
+});
+
+btnTableReload?.addEventListener('click', () => {
+  if (!tableBody) return;
+  tableBody.innerHTML = Array.from({ length: tablePageSize }).map(() => `
+    <tr class="skeleton-row">
+      <td><div class="skeleton-cell" style="width:16px;"></div></td>
+      <td><div class="skeleton-cell" style="width:20px;"></div></td>
+      <td><div class="skeleton-cell" style="width:70%;"></div></td>
+      <td><div class="skeleton-cell" style="width:60%;"></div></td>
+      <td><div class="skeleton-cell" style="width:50px;"></div></td>
+    </tr>
+  `).join('');
+  if (tableEditStatus) {
+    tableEditStatus.textContent = 'Reloading table data...';
+    tableEditStatus.className = 'status-value pending';
+  }
+  setTimeout(() => {
+    renderTable();
+    if (tableEditStatus) {
+      tableEditStatus.textContent = 'Table reloaded';
+      tableEditStatus.className = 'status-value success';
+    }
+  }, 600);
 });
 
 // Initial load table
@@ -664,6 +917,73 @@ btnOpenDialog?.addEventListener('click', () => {
 btnDialogClose?.addEventListener('click', () => {
   nativeModalDialog?.close();
   updateModalStatus('Closed', false);
+});
+
+// Escape key closes the custom CSS modal (native <dialog> already supports Escape natively)
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && modalOverlay && modalOverlay.style.display === 'flex') {
+    closeModal();
+  }
+});
+
+// --- Confirmation Dialog (destructive-action confirm/cancel pattern) ---
+const btnDeleteItem = document.getElementById('btn-delete-item');
+const confirmModalOverlay = document.getElementById('confirm-modal-overlay');
+const btnConfirmX = document.getElementById('btn-confirm-x');
+const btnConfirmCancel = document.getElementById('btn-confirm-cancel');
+const btnConfirmDelete = document.getElementById('btn-confirm-delete');
+const confirmStatus = document.getElementById('confirm-status');
+
+const closeConfirmModal = () => {
+  if (confirmModalOverlay) confirmModalOverlay.style.display = 'none';
+};
+
+btnDeleteItem?.addEventListener('click', () => {
+  if (confirmModalOverlay) confirmModalOverlay.style.display = 'flex';
+});
+
+btnConfirmX?.addEventListener('click', () => {
+  closeConfirmModal();
+  if (confirmStatus) {
+    confirmStatus.textContent = 'Deletion cancelled (closed via X)';
+    confirmStatus.className = 'status-value pending';
+  }
+});
+
+btnConfirmCancel?.addEventListener('click', () => {
+  closeConfirmModal();
+  if (confirmStatus) {
+    confirmStatus.textContent = 'Deletion cancelled';
+    confirmStatus.className = 'status-value pending';
+  }
+});
+
+btnConfirmDelete?.addEventListener('click', () => {
+  closeConfirmModal();
+  if (confirmStatus) {
+    confirmStatus.textContent = 'Item deleted successfully';
+    confirmStatus.className = 'status-value success';
+  }
+});
+
+confirmModalOverlay?.addEventListener('click', (e) => {
+  if (e.target === confirmModalOverlay) {
+    closeConfirmModal();
+    if (confirmStatus) {
+      confirmStatus.textContent = 'Deletion cancelled (clicked outside)';
+      confirmStatus.className = 'status-value pending';
+    }
+  }
+});
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && confirmModalOverlay && confirmModalOverlay.style.display === 'flex') {
+    closeConfirmModal();
+    if (confirmStatus) {
+      confirmStatus.textContent = 'Deletion cancelled (Escape key)';
+      confirmStatus.className = 'status-value pending';
+    }
+  }
 });
 
 // ==========================================================================
@@ -1220,6 +1540,22 @@ if (datePickerStandard && dateStatus) {
   });
 }
 
+// --- Time input (Date + Time pairing) ---
+const timePickerInput = document.getElementById('date-picker-time') as HTMLInputElement;
+const timeStatus = document.getElementById('time-status');
+timePickerInput?.addEventListener('change', () => {
+  if (timeStatus) {
+    timeStatus.textContent = timePickerInput.value;
+    timeStatus.className = 'status-value success';
+  }
+});
+
+// Disabled-date window for the custom calendar: today .. today+60 days
+const CALENDAR_MIN_DATE = new Date();
+CALENDAR_MIN_DATE.setHours(0, 0, 0, 0);
+const CALENDAR_MAX_DATE = new Date(CALENDAR_MIN_DATE);
+CALENDAR_MAX_DATE.setDate(CALENDAR_MAX_DATE.getDate() + 60);
+
 btnCustomDateTrigger?.addEventListener('click', (e) => {
   e.stopPropagation();
   if (customCalendarDropdown) {
@@ -1284,7 +1620,9 @@ function renderCalendar() {
     }
 
     const isoDate = `${calendarYear}-${pad(calendarMonth + 1)}-${pad(day)}`;
-    row += `<td><span class="calendar-day" data-day="${day}" data-date="${isoDate}">${day}</span></td>`;
+    const cellDate = new Date(calendarYear, calendarMonth, day);
+    const isDisabled = cellDate < CALENDAR_MIN_DATE || cellDate > CALENDAR_MAX_DATE;
+    row += `<td><span class="calendar-day${isDisabled ? ' disabled-day' : ''}" data-day="${day}" data-date="${isoDate}"${isDisabled ? ' data-disabled="true" aria-disabled="true"' : ''}>${day}</span></td>`;
     currentCol++;
   }
 
@@ -1299,8 +1637,8 @@ function renderCalendar() {
 
   calendarDaysBody.innerHTML = daysHtml;
 
-  // Bind day clicks
-  const days = calendarDaysBody.querySelectorAll('.calendar-day:not(.empty-day)');
+  // Bind day clicks (skip disabled out-of-range days)
+  const days = calendarDaysBody.querySelectorAll('.calendar-day:not(.empty-day):not(.disabled-day)');
   days.forEach((dayEl) => {
     dayEl.addEventListener('click', () => {
       const selectedDay = dayEl.getAttribute('data-day');
@@ -1842,6 +2180,370 @@ if (apiSimInput && apiLogList) {
 }
 
 // ==========================================================================
+// Challenge 43: Tabs
+// ==========================================================================
+const tabButtons = document.querySelectorAll<HTMLButtonElement>('.tab-btn');
+const tabsStatus = document.getElementById('tabs-status');
+
+tabButtons.forEach((btn) => {
+  btn.addEventListener('click', () => {
+    if (btn.disabled) return;
+    const targetTab = btn.dataset.tab;
+
+    tabButtons.forEach((b) => {
+      b.classList.remove('active');
+      b.setAttribute('aria-selected', 'false');
+    });
+    btn.classList.add('active');
+    btn.setAttribute('aria-selected', 'true');
+
+    document.querySelectorAll('.tab-panel').forEach((panel) => {
+      const isActive = panel.id === `tab-panel-${targetTab}`;
+      panel.classList.toggle('active', isActive);
+      if (isActive) panel.removeAttribute('hidden');
+      else panel.setAttribute('hidden', '');
+    });
+
+    if (tabsStatus) {
+      tabsStatus.textContent = targetTab || '';
+      tabsStatus.className = 'status-value success';
+    }
+  });
+});
+
+// ==========================================================================
+// Challenge 44: Accordion
+// ==========================================================================
+const accordionHeaders = document.querySelectorAll<HTMLButtonElement>('.accordion-header');
+const accordionStatus = document.getElementById('accordion-status');
+
+function updateAccordionStatus() {
+  if (!accordionStatus) return;
+  const openCount = document.querySelectorAll('.accordion-header[aria-expanded="true"]').length;
+  accordionStatus.textContent = `${openCount} open`;
+  accordionStatus.className = openCount > 0 ? 'status-value success' : 'status-value pending';
+}
+
+accordionHeaders.forEach((header) => {
+  header.addEventListener('click', () => {
+    const bodyId = header.getAttribute('aria-controls');
+    const body = bodyId ? document.getElementById(bodyId) : null;
+    const isExpanded = header.getAttribute('aria-expanded') === 'true';
+
+    header.setAttribute('aria-expanded', String(!isExpanded));
+    if (body) {
+      if (isExpanded) body.setAttribute('hidden', '');
+      else body.removeAttribute('hidden');
+    }
+    const icon = header.querySelector('.accordion-icon');
+    if (icon) icon.textContent = isExpanded ? '+' : '−';
+
+    updateAccordionStatus();
+  });
+});
+
+// ==========================================================================
+// Challenge 45: Toggle / Switch
+// ==========================================================================
+const toggleNotifications = document.getElementById('toggle-notifications') as HTMLInputElement;
+const toggleStatus = document.getElementById('toggle-status');
+
+toggleNotifications?.addEventListener('change', () => {
+  if (toggleStatus) {
+    toggleStatus.textContent = toggleNotifications.checked ? 'on' : 'off';
+    toggleStatus.className = toggleNotifications.checked ? 'status-value success' : 'status-value pending';
+  }
+});
+
+// ==========================================================================
+// Challenge 46: Toast Notifications
+// ==========================================================================
+const btnToastSuccess = document.getElementById('btn-toast-success');
+const btnToastError = document.getElementById('btn-toast-error');
+const toastStack = document.getElementById('toast-stack');
+const toastStatus = document.getElementById('toast-status');
+let toastCount = 0;
+let toastIdCounter = 0;
+
+function showToast(kind: 'success' | 'error', message: string) {
+  if (!toastStack) return;
+  toastCount++;
+  if (toastStatus) {
+    toastStatus.textContent = String(toastCount);
+    toastStatus.className = 'status-value success';
+  }
+  const toastId = `toast-${++toastIdCounter}`;
+  const toast = document.createElement('div');
+  toast.className = `toast toast-${kind}`;
+  toast.id = toastId;
+  toast.setAttribute('data-testid', toastId);
+  toast.setAttribute('role', 'status');
+  toast.innerHTML = `<span>${kind === 'success' ? '✅' : '❌'} ${message}</span><button class="toast-dismiss" data-testid="${toastId}-dismiss" aria-label="Dismiss toast">&times;</button>`;
+  toastStack.appendChild(toast);
+
+  const remove = () => toast.remove();
+  toast.querySelector('.toast-dismiss')?.addEventListener('click', remove);
+  setTimeout(remove, 3000);
+}
+
+btnToastSuccess?.addEventListener('click', () => showToast('success', 'Action completed successfully!'));
+btnToastError?.addEventListener('click', () => showToast('error', 'Something went wrong.'));
+
+// ==========================================================================
+// Challenge 47: Dependent Dropdowns
+// ==========================================================================
+const depCountry = document.getElementById('dep-country') as HTMLSelectElement;
+const depState = document.getElementById('dep-state') as HTMLSelectElement;
+const depCity = document.getElementById('dep-city') as HTMLSelectElement;
+const depDropdownStatus = document.getElementById('dep-dropdown-status');
+
+const STATES_BY_COUNTRY: Record<string, string[]> = {
+  US: ['California', 'Texas', 'New York'],
+  IN: ['Maharashtra', 'Karnataka', 'Delhi'],
+};
+
+const CITIES_BY_STATE: Record<string, string[]> = {
+  California: ['Los Angeles', 'San Francisco'],
+  Texas: ['Austin', 'Dallas'],
+  'New York': ['New York City', 'Buffalo'],
+  Maharashtra: ['Mumbai', 'Pune'],
+  Karnataka: ['Bengaluru', 'Mysuru'],
+  Delhi: ['New Delhi'],
+};
+
+function fillSelect(select: HTMLSelectElement, options: string[], placeholder: string) {
+  select.innerHTML = `<option value="">${placeholder}</option>` + options.map((o) => `<option value="${o}">${o}</option>`).join('');
+}
+
+depCountry?.addEventListener('change', () => {
+  const states = STATES_BY_COUNTRY[depCountry.value] || [];
+  if (states.length) {
+    fillSelect(depState, states, 'Select state...');
+    depState.disabled = false;
+  } else {
+    fillSelect(depState, [], 'Select country first...');
+    depState.disabled = true;
+  }
+  fillSelect(depCity, [], 'Select state first...');
+  depCity.disabled = true;
+  if (depDropdownStatus) {
+    depDropdownStatus.textContent = depCountry.value || 'none';
+    depDropdownStatus.className = 'status-value pending';
+  }
+});
+
+depState?.addEventListener('change', () => {
+  const cities = CITIES_BY_STATE[depState.value] || [];
+  if (cities.length) {
+    fillSelect(depCity, cities, 'Select city...');
+    depCity.disabled = false;
+  } else {
+    fillSelect(depCity, [], 'Select state first...');
+    depCity.disabled = true;
+  }
+  if (depDropdownStatus) {
+    depDropdownStatus.textContent = `${depCountry.value} > ${depState.value}`;
+    depDropdownStatus.className = 'status-value pending';
+  }
+});
+
+depCity?.addEventListener('change', () => {
+  if (depDropdownStatus && depCity.value) {
+    depDropdownStatus.textContent = `${depCountry.value} > ${depState.value} > ${depCity.value}`;
+    depDropdownStatus.className = 'status-value success';
+  }
+});
+
+// ==========================================================================
+// Challenge 48: OTP / Verification Code Input
+// ==========================================================================
+const otpBoxes = document.querySelectorAll<HTMLInputElement>('.otp-box');
+const btnOtpVerify = document.getElementById('btn-otp-verify');
+const otpStatus = document.getElementById('otp-status');
+const OTP_CORRECT_CODE = '123456';
+
+otpBoxes.forEach((box, index) => {
+  box.addEventListener('input', () => {
+    box.value = box.value.replace(/[^0-9]/g, '').slice(0, 1);
+    if (box.value && index < otpBoxes.length - 1) {
+      otpBoxes[index + 1].focus();
+    }
+  });
+  box.addEventListener('keydown', (e) => {
+    if (e.key === 'Backspace' && !box.value && index > 0) {
+      otpBoxes[index - 1].focus();
+    }
+  });
+});
+
+btnOtpVerify?.addEventListener('click', () => {
+  const code = Array.from(otpBoxes).map((b) => b.value).join('');
+  if (!otpStatus) return;
+  if (code.length < 6) {
+    otpStatus.textContent = 'Incomplete — fill all 6 digits';
+    otpStatus.className = 'status-value error';
+  } else if (code === OTP_CORRECT_CODE) {
+    otpStatus.textContent = 'Verified successfully!';
+    otpStatus.className = 'status-value success';
+  } else {
+    otpStatus.textContent = 'Incorrect code, try again';
+    otpStatus.className = 'status-value error';
+  }
+});
+
+// ==========================================================================
+// Challenge 49: Rich Text Editor
+// ==========================================================================
+const rteEditor = document.getElementById('rte-editor');
+const rteStatus = document.getElementById('rte-status');
+const rteCmdButtons = document.querySelectorAll<HTMLButtonElement>('.rte-cmd-btn');
+const btnRteClear = document.getElementById('rte-btn-clear');
+
+function updateRteStatus() {
+  if (rteEditor && rteStatus) {
+    const charCount = (rteEditor.textContent || '').length;
+    rteStatus.textContent = `${charCount} characters`;
+    rteStatus.className = 'status-value success';
+  }
+}
+
+rteCmdButtons.forEach((btn) => {
+  btn.addEventListener('click', () => {
+    rteEditor?.focus();
+    document.execCommand(btn.dataset.command || '');
+    updateRteStatus();
+  });
+});
+
+btnRteClear?.addEventListener('click', () => {
+  if (rteEditor) rteEditor.innerHTML = '';
+  updateRteStatus();
+});
+
+rteEditor?.addEventListener('input', updateRteStatus);
+
+// ==========================================================================
+// Challenge 50: Tree View
+// ==========================================================================
+const treeToggles = document.querySelectorAll<HTMLButtonElement>('.tree-toggle');
+const treeCheckboxes = document.querySelectorAll<HTMLInputElement>('.tree-checkbox');
+const treeStatus = document.getElementById('tree-status');
+
+treeToggles.forEach((toggle) => {
+  toggle.addEventListener('click', () => {
+    const row = toggle.closest('.tree-row');
+    const node = row?.parentElement;
+    const children = node?.querySelector<HTMLElement>(':scope > .tree-children');
+    if (!children) return;
+    const isExpanded = toggle.getAttribute('aria-expanded') === 'true';
+    toggle.setAttribute('aria-expanded', String(!isExpanded));
+    toggle.textContent = isExpanded ? '▸' : '▾';
+    children.style.display = isExpanded ? 'none' : '';
+  });
+});
+
+function updateTreeStatus() {
+  if (!treeStatus) return;
+  const leafChecked = Array.from(treeCheckboxes).filter((cb) => {
+    const li = cb.closest('.tree-node');
+    return li?.classList.contains('tree-leaf') && cb.checked;
+  }).length;
+  treeStatus.textContent = `${leafChecked} selected`;
+  treeStatus.className = leafChecked > 0 ? 'status-value success' : 'status-value pending';
+}
+
+function cascadeCheck(checkbox: HTMLInputElement) {
+  const node = checkbox.closest('.tree-node');
+  const descendantCheckboxes = node?.querySelectorAll<HTMLInputElement>('.tree-checkbox');
+  descendantCheckboxes?.forEach((cb) => {
+    if (cb !== checkbox) cb.checked = checkbox.checked;
+  });
+}
+
+treeCheckboxes.forEach((cb) => {
+  cb.addEventListener('change', () => {
+    cascadeCheck(cb);
+    updateTreeStatus();
+  });
+});
+
+// ==========================================================================
+// Challenge 51: Responsive Navigation
+// ==========================================================================
+const miniNavbarHamburger = document.getElementById('mini-navbar-hamburger');
+const miniNavbarMobileMenu = document.getElementById('mini-navbar-mobile-menu');
+const miniNavbar = document.getElementById('mini-navbar');
+const responsiveNavStatus = document.getElementById('responsive-nav-status');
+
+miniNavbarHamburger?.addEventListener('click', () => {
+  if (!miniNavbarMobileMenu) return;
+  const isHidden = miniNavbarMobileMenu.hidden;
+  miniNavbarMobileMenu.hidden = !isHidden;
+  miniNavbarHamburger.setAttribute('aria-expanded', String(isHidden));
+});
+
+function updateResponsiveNavStatus() {
+  if (!miniNavbar || !responsiveNavStatus) return;
+  const isMobile = miniNavbar.offsetWidth < 640;
+  responsiveNavStatus.textContent = isMobile ? 'mobile (hamburger)' : 'desktop';
+  responsiveNavStatus.className = 'status-value success';
+}
+
+window.addEventListener('resize', updateResponsiveNavStatus);
+if (miniNavbar) {
+  new ResizeObserver(updateResponsiveNavStatus).observe(miniNavbar);
+}
+updateResponsiveNavStatus();
+
+// ==========================================================================
+// Challenge 52: Popover
+// ==========================================================================
+const popoverTrigger = document.getElementById('popover-trigger');
+const popoverBox = document.getElementById('popover-box');
+const popoverClose = document.getElementById('popover-close');
+const popoverStatus = document.getElementById('popover-status');
+
+function openPopover() {
+  if (!popoverBox) return;
+  popoverBox.hidden = false;
+  popoverTrigger?.setAttribute('aria-expanded', 'true');
+  if (popoverStatus) {
+    popoverStatus.textContent = 'open';
+    popoverStatus.className = 'status-value success';
+  }
+}
+
+function closePopover(reason: string) {
+  if (!popoverBox || popoverBox.hidden) return;
+  popoverBox.hidden = true;
+  popoverTrigger?.setAttribute('aria-expanded', 'false');
+  if (popoverStatus) {
+    popoverStatus.textContent = `closed (${reason})`;
+    popoverStatus.className = 'status-value pending';
+  }
+}
+
+popoverTrigger?.addEventListener('click', (e) => {
+  e.stopPropagation();
+  if (popoverBox?.hidden) openPopover();
+  else closePopover('trigger clicked again');
+});
+
+popoverClose?.addEventListener('click', () => closePopover('close button'));
+
+document.addEventListener('click', (e) => {
+  if (popoverBox && !popoverBox.hidden && !popoverBox.contains(e.target as Node) && e.target !== popoverTrigger) {
+    closePopover('clicked outside');
+  }
+});
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && popoverBox && !popoverBox.hidden) {
+    closePopover('Escape key');
+  }
+});
+
+// ==========================================================================
 // Section Reset Logic (Centralized Handlers)
 // ==========================================================================
 function resetSection(id: string) {
@@ -1878,6 +2580,15 @@ function resetSection(id: string) {
   if (id === 'section-1') {
     const fs = document.getElementById('form-status');
     if (fs) { fs.textContent = 'Not submitted'; fs.className = 'status-value pending'; }
+    ['form-name', 'form-email', 'form-password', 'form-confirm-password', 'form-phone'].forEach((fid) => {
+      document.getElementById(fid)?.classList.remove('invalid', 'valid');
+      const err = document.getElementById(`err-${fid}`);
+      if (err) err.textContent = '';
+    });
+    if (strengthBar) strengthBar.className = 'strength-bar';
+    if (strengthLabel) strengthLabel.textContent = 'Enter a password';
+    if (couponInput) couponInput.disabled = true;
+    if (hasCouponCheckbox) hasCouponCheckbox.checked = false;
   } else if (id === 'section-2') {
     const clickStatus = document.getElementById('click-status');
     if (clickStatus) { clickStatus.textContent = 'none'; clickStatus.className = 'status-value pending'; }
@@ -1949,6 +2660,8 @@ function resetSection(id: string) {
     if (stdPicker) stdPicker.value = '';
     const dateStatus = document.getElementById('date-status');
     if (dateStatus) { dateStatus.textContent = 'none'; dateStatus.className = 'status-value pending'; }
+    if (timePickerInput) timePickerInput.value = '';
+    if (timeStatus) { timeStatus.textContent = 'none'; timeStatus.className = 'status-value pending'; }
     const dropdown = document.getElementById('custom-calendar-dropdown');
     if (dropdown) dropdown.style.display = 'none';
   } else if (id === 'section-29') {
@@ -2014,6 +2727,68 @@ function resetSection(id: string) {
     const apiStatus = document.getElementById('api-sim-status');
     if (apiStatus) { apiStatus.textContent = '0 requests'; apiStatus.className = 'status-value pending'; }
     requestCounter = 0;
+  } else if (id === 'section-43') {
+    tabButtons.forEach((b) => { b.classList.remove('active'); b.setAttribute('aria-selected', 'false'); });
+    document.getElementById('tab-btn-profile')?.classList.add('active');
+    document.getElementById('tab-btn-profile')?.setAttribute('aria-selected', 'true');
+    document.querySelectorAll('.tab-panel').forEach((panel) => {
+      const isProfile = panel.id === 'tab-panel-profile';
+      panel.classList.toggle('active', isProfile);
+      if (isProfile) panel.removeAttribute('hidden'); else panel.setAttribute('hidden', '');
+    });
+    if (tabsStatus) { tabsStatus.textContent = 'profile'; tabsStatus.className = 'status-value pending'; }
+  } else if (id === 'section-44') {
+    accordionHeaders.forEach((h) => {
+      h.setAttribute('aria-expanded', 'false');
+      const icon = h.querySelector('.accordion-icon');
+      if (icon) icon.textContent = '+';
+      const bodyId = h.getAttribute('aria-controls');
+      const body = bodyId ? document.getElementById(bodyId) : null;
+      body?.setAttribute('hidden', '');
+    });
+    updateAccordionStatus();
+  } else if (id === 'section-45') {
+    if (toggleNotifications) toggleNotifications.checked = false;
+    if (toggleStatus) { toggleStatus.textContent = 'off'; toggleStatus.className = 'status-value pending'; }
+  } else if (id === 'section-46') {
+    if (toastStack) toastStack.innerHTML = '';
+    toastCount = 0;
+    if (toastStatus) { toastStatus.textContent = '0'; toastStatus.className = 'status-value pending'; }
+  } else if (id === 'section-47') {
+    fillSelect(depState, [], 'Select country first...');
+    depState.disabled = true;
+    fillSelect(depCity, [], 'Select state first...');
+    depCity.disabled = true;
+    if (depDropdownStatus) { depDropdownStatus.textContent = 'none'; depDropdownStatus.className = 'status-value pending'; }
+  } else if (id === 'section-48') {
+    otpBoxes.forEach((b) => (b.value = ''));
+    otpBoxes[0]?.focus();
+    if (otpStatus) { otpStatus.textContent = 'Incomplete'; otpStatus.className = 'status-value pending'; }
+  } else if (id === 'section-49') {
+    if (rteEditor) rteEditor.innerHTML = 'Start typing here, then select text and click Bold/Italic/Underline...';
+    if (rteStatus) { rteStatus.textContent = '0 characters'; rteStatus.className = 'status-value pending'; }
+  } else if (id === 'section-50') {
+    treeCheckboxes.forEach((cb) => (cb.checked = false));
+    updateTreeStatus();
+  } else if (id === 'section-51') {
+    if (miniNavbarMobileMenu) miniNavbarMobileMenu.hidden = true;
+    miniNavbarHamburger?.setAttribute('aria-expanded', 'false');
+    updateResponsiveNavStatus();
+  } else if (id === 'section-52') {
+    closePopover('reset');
+    if (popoverStatus) { popoverStatus.textContent = 'closed'; popoverStatus.className = 'status-value pending'; }
+  } else if (id === 'section-8') {
+    tableData = originalTableData.map((r) => ({ ...r }));
+    selectedRowIds.clear();
+    currentTablePage = 1;
+    searchQuery = '';
+    sortAsc = true;
+    if (searchInput) searchInput.value = '';
+    if (tableEditStatus) { tableEditStatus.textContent = 'Click a name to edit it inline'; tableEditStatus.className = 'status-value pending'; }
+    renderTable();
+  } else if (id === 'section-10') {
+    closeConfirmModal();
+    if (confirmStatus) { confirmStatus.textContent = 'No action yet'; confirmStatus.className = 'status-value pending'; }
   }
 }
 
@@ -2047,13 +2822,15 @@ document.querySelectorAll('.challenge-card').forEach((card) => {
 // ==========================================================================
 const challengeSteps: Record<string, string[]> = {
   'section-1': [
-    'Fill the "Full Name" input field (`#form-name`)',
-    'Fill the "Email Address" input field (`#form-email`)',
-    'Fill the "Password" input field (`#form-password`)',
-    'Fill the "Phone Number" input field (`#form-phone`)',
+    'Fill the "Full Name" input field (`#form-name`) with under 2 characters and verify the inline error (`#err-form-name`)',
+    'Fill the "Email Address" input field (`#form-email`) with an invalid format and verify the inline error',
+    'Type into "Password" (`#form-password`) and watch the strength meter (`#strength-label`) change as you type',
+    'Type a non-matching value into "Confirm Password" (`#form-confirm-password`) and verify the mismatch error',
+    'Fill the "Phone Number" input field (`#form-phone`) with an invalid value (too short, or containing letters) and verify the inline error',
     'Fill the "Short Biography" textarea (`#form-bio`)',
-    'Click "Submit Form" button and verify status changes to "Submitted successfully!"',
-    'Click "Reset Form" button to clear all form fields'
+    'Verify "Account ID" (`#form-account-id`) is readonly and "Coupon Code" (`#form-coupon-code`) is disabled until "I have a coupon code" (`#form-has-coupon`) is checked',
+    'Fix all fields and click "Submit Form" — verify the button shows a brief loading state before status changes to "Submitted successfully!"',
+    'Click "Reset Form" button to clear all form fields and inline errors'
   ],
   'section-2': [
     'Click "Click Me" button and verify Single click status changes',
@@ -2098,7 +2875,12 @@ const challengeSteps: Record<string, string[]> = {
   'section-8': [
     'Retrieve all table cell values across rows and columns',
     'Click table header "Name" to sort the table rows alphabetically',
-    'Type query into "Search table..." input (`#table-search`) and verify row filtering'
+    'Type query into "Search table..." input (`#table-search`) and verify row filtering',
+    'Click "Select all rows" (`#table-select-all`) and verify it reaches an indeterminate state when only some visible rows are checked',
+    'Click a Name cell to edit it inline, press Enter to save (or Escape to cancel), and verify the new value persists',
+    'Select one or more rows and click "🗑 Delete Selected" (`#btn-bulk-delete`) to remove them',
+    'Use the numbered page buttons (`.page-num-btn`) to jump directly to a page',
+    'Click "↻ Reload" (`#btn-table-reload`) and verify a brief skeleton-loading state before real rows return'
   ],
   'section-9': [
     'Click "Trigger Alert" button and accept the browser alert dialog',
@@ -2108,7 +2890,9 @@ const challengeSteps: Record<string, string[]> = {
   ],
   'section-10': [
     'Click "Open Custom Modal" button, verify modal appears, then click "Close Modal" or X icon',
-    'Click "Open HTML5 Dialog" button, verify dialog appears, then click "Close Dialog"'
+    'Open the custom modal again and close it by pressing Escape, and separately by clicking the overlay background',
+    'Click "Open HTML5 Dialog" button, verify dialog appears, then click "Close Dialog"',
+    'Click "🗑 Delete Item" (`#btn-delete-item`) to open the confirmation dialog, then test Cancel, X, outside-click, Escape, and "Confirm Delete" — each should update `#confirm-status` distinctly'
   ],
   'section-11': [
     'Switch context inside the frame element (`#iframe-challenge`)',
@@ -2193,8 +2977,10 @@ const challengeSteps: Record<string, string[]> = {
   ],
   'section-28': [
     'Select a date in "Standard HTML5 Date Input" (`#date-picker-standard`)',
+    'Select a value in the "Time Input" (`#date-picker-time`)',
     'Click "📅 Open Calendar" button (`#btn-custom-date-trigger`) to open custom date picker',
-    'Use "<" (`#btn-calendar-prev`) and ">" (`#btn-calendar-next`) buttons to navigate months and select a day'
+    'Verify dates before today or more than 60 days out are rendered disabled (`.disabled-day`) and cannot be clicked',
+    'Use "<" (`#btn-calendar-prev`) and ">" (`#btn-calendar-next`) buttons to navigate months and select a valid day'
   ],
   'section-29': [
     'Locate `#resizable-box` element',
@@ -2256,6 +3042,53 @@ const challengeSteps: Record<string, string[]> = {
   'section-42': [
     'Type text into `#api-sim-input`',
     'Verify simulated network log (`#api-log-list`) appends an API request log for every character typed'
+  ],
+  'section-43': [
+    'Click each tab button ("Profile", "Security", "Notifications") and verify the matching panel becomes visible while the others are hidden',
+    'Verify the "Billing (Disabled)" tab (`#tab-btn-billing`) cannot be activated'
+  ],
+  'section-44': [
+    'Click an accordion header (`.accordion-header`) and verify its body expands (`aria-expanded="true"`)',
+    'Open a second panel and verify the first one stays open (multiple panels can be open at once)',
+    'Click an open header again and verify it collapses'
+  ],
+  'section-45': [
+    'Toggle "Enable Notifications" (`#toggle-notifications`) and verify the status panel updates to "on"/"off"',
+    'Verify "Locked Setting" (`#toggle-disabled`) cannot be toggled'
+  ],
+  'section-46': [
+    'Click "Show Success Toast" (`#btn-toast-success`) and verify a toast appears in `#toast-stack`',
+    'Verify the toast auto-dismisses after ~3 seconds, or dismiss it manually via its `.toast-dismiss` button'
+  ],
+  'section-47': [
+    'Select a country from `#dep-country` and verify `#dep-state` becomes enabled with matching states',
+    'Select a state from `#dep-state` and verify `#dep-city` becomes enabled with matching cities',
+    'Select a city and verify the status panel shows the full Country > State > City chain'
+  ],
+  'section-48': [
+    'Type a digit into the first OTP box (`[data-otp-index="0"]`) and verify focus auto-advances to the next box',
+    'Press Backspace on an empty box and verify focus moves back to the previous box',
+    'Fill all 6 boxes with `123456` and click "Verify Code" (`#btn-otp-verify`) to see a success status'
+  ],
+  'section-49': [
+    'Type text into the editor (`#rte-editor`), select a portion of it, and click Bold/Italic/Underline',
+    'Verify the character count status updates as you type',
+    'Click "Clear" (`#rte-btn-clear`) and verify the editor empties'
+  ],
+  'section-50': [
+    'Click a folder toggle (`.tree-toggle`) and verify its children expand/collapse',
+    'Check a parent folder checkbox (e.g. `#tree-check-src`) and verify all its descendant checkboxes become checked',
+    'Verify the status panel counts only leaf (file) selections, not folders'
+  ],
+  'section-51': [
+    'At a desktop viewport width, verify the nav links (`#mini-navbar-links`) are visible and the hamburger button is hidden',
+    'Resize the viewport below 640px (or use Playwright `setViewportSize`) and verify the hamburger button (`#mini-navbar-hamburger`) appears instead',
+    'Click the hamburger button and verify the mobile menu (`#mini-navbar-mobile-menu`) toggles open/closed'
+  ],
+  'section-52': [
+    'Click "Show Info Popover" (`#popover-trigger`) and verify `#popover-box` becomes visible',
+    'Verify it stays open (unlike a hover tooltip) until dismissed',
+    'Test all three dismiss paths: the close button, clicking outside, and pressing Escape'
   ]
 };
 

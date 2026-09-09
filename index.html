@@ -56,23 +56,44 @@
               <form id="basic-form" novalidate>
                 <div class="form-group">
                   <label for="form-name">Full Name</label>
-                  <input type="text" id="form-name" name="name" class="form-control" data-testid="form-name" aria-label="First Name" placeholder="Enter name" required>
+                  <input type="text" id="form-name" name="name" class="form-control" data-testid="form-name" aria-label="First Name" placeholder="Enter name (min 2 characters)" minlength="2" required>
+                  <span class="field-error" id="err-form-name" data-testid="err-form-name"></span>
                 </div>
                 <div class="form-group">
                   <label for="form-email">Email Address</label>
                   <input type="email" id="form-email" name="email" class="form-control" data-testid="form-email" aria-label="Email" placeholder="Enter email" required>
+                  <span class="field-error" id="err-form-email" data-testid="err-form-email"></span>
                 </div>
                 <div class="form-group">
                   <label for="form-password">Password</label>
-                  <input type="password" id="form-password" name="password" class="form-control" data-testid="form-password" aria-label="Password" placeholder="Enter password" required>
+                  <input type="password" id="form-password" name="password" class="form-control" data-testid="form-password" aria-label="Password" placeholder="Min 8 characters" minlength="8" required>
+                  <div class="password-strength-meter" id="password-strength-meter" data-testid="password-strength-meter">
+                    <div class="strength-bar" id="strength-bar"></div>
+                  </div>
+                  <span class="strength-label" id="strength-label" data-testid="strength-label">Enter a password</span>
+                  <span class="field-error" id="err-form-password" data-testid="err-form-password"></span>
+                </div>
+                <div class="form-group">
+                  <label for="form-confirm-password">Confirm Password</label>
+                  <input type="password" id="form-confirm-password" name="confirmPassword" class="form-control" data-testid="form-confirm-password" aria-label="Confirm Password" placeholder="Re-enter password" required>
+                  <span class="field-error" id="err-form-confirm-password" data-testid="err-form-confirm-password"></span>
                 </div>
                 <div class="form-group">
                   <label for="form-phone">Phone Number</label>
-                  <input type="tel" id="form-phone" name="phone" class="form-control" data-testid="form-phone" aria-label="Phone Number" placeholder="Enter phone number" required>
+                  <input type="tel" id="form-phone" name="phone" class="form-control" data-testid="form-phone" aria-label="Phone Number" placeholder="e.g. +1234567890" pattern="\+?[0-9]{10,15}" required>
+                  <span class="field-error" id="err-form-phone" data-testid="err-form-phone"></span>
                 </div>
                 <div class="form-group">
                   <label for="form-bio">Short Biography</label>
                   <textarea id="form-bio" name="bio" class="form-control" data-testid="form-bio" aria-label="Short Bio" placeholder="Enter bio" required></textarea>
+                </div>
+                <div class="form-group">
+                  <label for="form-account-id">Account ID <span class="field-hint">(readonly)</span></label>
+                  <input type="text" id="form-account-id" class="form-control" data-testid="form-account-id" aria-label="Account ID (readonly)" value="ACC-2026-00042" readonly>
+                </div>
+                <div class="form-group">
+                  <label class="control-label"><input type="checkbox" id="form-has-coupon" data-testid="form-has-coupon" aria-label="I have a coupon code"> I have a coupon code</label>
+                  <input type="text" id="form-coupon-code" class="form-control" data-testid="form-coupon-code" aria-label="Coupon Code (enable checkbox above first)" placeholder="Enabled once checkbox above is checked" disabled style="margin-top:0.5rem;">
                 </div>
                 <div class="btn-group">
                   <button type="submit" id="form-submit" class="btn btn-primary" data-testid="form-submit" aria-label="Submit Form">Submit Form</button>
@@ -370,11 +391,17 @@
             <div class="playground table-playground">
               <div class="table-controls">
                 <input type="text" id="table-search" class="form-control search-control" data-testid="table-search" placeholder="Search table..." aria-label="Search Table">
+                <button id="btn-table-reload" class="btn btn-xs btn-outline" data-testid="btn-table-reload" aria-label="Reload table data">↻ Reload</button>
+              </div>
+              <div class="bulk-action-bar" id="bulk-action-bar" data-testid="bulk-action-bar" hidden>
+                <span id="bulk-selected-count" data-testid="bulk-selected-count">0 selected</span>
+                <button id="btn-bulk-delete" class="btn btn-xs btn-secondary" data-testid="btn-bulk-delete" aria-label="Delete selected rows">🗑 Delete Selected</button>
               </div>
               <div class="table-wrapper">
                 <table class="practice-table" id="practice-table" data-testid="practice-table">
                   <thead>
                     <tr>
+                      <th><input type="checkbox" id="table-select-all" data-testid="table-select-all" aria-label="Select all rows"></th>
                       <th data-sort="id">ID</th>
                       <th data-sort="name" class="sortable" id="th-name" data-testid="th-name">Name <span class="sort-icon">↕</span></th>
                       <th data-sort="role">Role</th>
@@ -389,8 +416,13 @@
               <div class="table-pagination">
                 <button id="btn-prev-page" class="btn btn-xs btn-outline" data-testid="btn-prev-page" aria-label="Previous Page">Previous</button>
                 <span id="table-page-info" class="page-info" data-testid="table-page-info">Page 1 of 3</span>
+                <div class="page-number-list" id="page-number-list" data-testid="page-number-list"></div>
                 <button id="btn-next-page" class="btn btn-xs btn-outline" data-testid="btn-next-page" aria-label="Next Page">Next</button>
               </div>
+            </div>
+            <div class="status-panel">
+              <span class="status-label">Table:</span>
+              <span id="table-edit-status" class="status-value pending" data-testid="table-edit-status">Click a name to edit it inline</span>
             </div>
           </section>
 
@@ -435,6 +467,24 @@
               <div class="btn-group">
                 <button id="btn-open-modal" class="btn btn-primary" data-testid="btn-open-modal" aria-label="Open Modal">Open Custom Modal</button>
                 <button id="btn-open-dialog" class="btn btn-secondary" data-testid="btn-open-dialog" aria-label="Open Dialog">Open HTML5 Dialog</button>
+                <button id="btn-delete-item" class="btn btn-secondary" data-testid="btn-delete-item" aria-label="Delete item (opens confirmation)">🗑 Delete Item</button>
+              </div>
+
+              <!-- Confirmation Dialog -->
+              <div id="confirm-modal-overlay" class="modal-overlay" style="display: none;" data-testid="confirm-modal-overlay">
+                <div class="modal-card" data-testid="confirm-modal-card">
+                  <div class="modal-header">
+                    <h3>⚠️ Confirm Deletion</h3>
+                    <button id="btn-confirm-x" class="modal-close-x" data-testid="btn-confirm-x" aria-label="Close confirmation dialog">&times;</button>
+                  </div>
+                  <div class="modal-body">
+                    <p>Are you sure you want to delete this item? This action cannot be undone.</p>
+                  </div>
+                  <div class="modal-footer">
+                    <button id="btn-confirm-cancel" class="btn btn-xs btn-secondary" data-testid="btn-confirm-cancel" aria-label="Cancel deletion">Cancel</button>
+                    <button id="btn-confirm-delete" class="btn btn-xs btn-primary" data-testid="btn-confirm-delete" aria-label="Confirm deletion" style="margin-left:0.5rem;">Confirm Delete</button>
+                  </div>
+                </div>
               </div>
 
               <!-- CSS Modal Overlay -->
@@ -465,6 +515,10 @@
             <div class="status-panel">
               <span class="status-label">Modal Status:</span>
               <span id="modal-status" class="status-value pending" data-testid="modal-status">Closed</span>
+            </div>
+            <div class="status-panel">
+              <span class="status-label">Delete Confirmation:</span>
+              <span id="confirm-status" class="status-value pending" data-testid="confirm-status">No action yet</span>
             </div>
           </section>
 
@@ -842,8 +896,13 @@
                 <input type="date" id="date-picker-standard" class="form-control select-control" data-testid="date-picker-standard" aria-label="Standard Date Picker">
               </div>
 
+              <div class="form-group">
+                <label for="date-picker-time">Time Input (Date + Time pairing)</label>
+                <input type="time" id="date-picker-time" class="form-control select-control" data-testid="date-picker-time" aria-label="Time Picker">
+              </div>
+
               <div class="custom-calendar-picker card-subsection">
-                <h3>Custom Calendar Dialog Picker</h3>
+                <h3>Custom Calendar Dialog Picker <span class="field-hint">(past dates and dates beyond 60 days out are disabled)</span></h3>
                 <div class="calendar-trigger-container">
                   <button type="button" id="btn-custom-date-trigger" class="btn btn-outline" data-testid="btn-custom-date-trigger" aria-label="Open Calendar">📅 Open Calendar</button>
                   <span id="cal-selected-display" class="cal-selected-display" data-testid="cal-selected-display" style="display:none;"></span>
@@ -875,6 +934,10 @@
             <div class="status-panel">
               <span class="status-label">Chosen date:</span>
               <span id="date-status" class="status-value pending" data-testid="date-status">none</span>
+            </div>
+            <div class="status-panel">
+              <span class="status-label">Chosen time:</span>
+              <span id="time-status" class="status-value pending" data-testid="time-status">none</span>
             </div>
           </section>
 
@@ -1325,6 +1388,333 @@
             <div class="status-panel">
               <span class="status-label">API Requests:</span>
               <span id="api-sim-status" class="status-value pending" data-testid="api-sim-status">0 requests</span>
+            </div>
+          </section>
+
+          <!-- Section 43 — Tabs -->
+          <section id="section-43" class="challenge-card" data-testid="section-43">
+            <div class="card-header">
+              <span class="section-number">43</span>
+              <h2>Tabs</h2>
+            </div>
+            <p class="card-desc">Practise switching between tab panels, including a disabled tab that should never become active.</p>
+            <div class="playground tabs-playground">
+              <div class="tabs-list" role="tablist" aria-label="Practice tabs">
+                <button class="tab-btn active" id="tab-btn-profile" role="tab" aria-selected="true" aria-controls="tab-panel-profile" data-tab="profile" data-testid="tab-btn-profile">Profile</button>
+                <button class="tab-btn" id="tab-btn-security" role="tab" aria-selected="false" aria-controls="tab-panel-security" data-tab="security" data-testid="tab-btn-security">Security</button>
+                <button class="tab-btn" id="tab-btn-notifications" role="tab" aria-selected="false" aria-controls="tab-panel-notifications" data-tab="notifications" data-testid="tab-btn-notifications">Notifications</button>
+                <button class="tab-btn" id="tab-btn-billing" disabled role="tab" aria-selected="false" aria-controls="tab-panel-billing" data-tab="billing" data-testid="tab-btn-billing">Billing (Disabled)</button>
+              </div>
+              <div class="tab-panel active" id="tab-panel-profile" role="tabpanel" data-testid="tab-panel-profile">
+                <p>👤 Profile settings panel content.</p>
+              </div>
+              <div class="tab-panel" id="tab-panel-security" role="tabpanel" data-testid="tab-panel-security" hidden>
+                <p>🔒 Security settings panel content.</p>
+              </div>
+              <div class="tab-panel" id="tab-panel-notifications" role="tabpanel" data-testid="tab-panel-notifications" hidden>
+                <p>🔔 Notifications settings panel content.</p>
+              </div>
+              <div class="tab-panel" id="tab-panel-billing" role="tabpanel" data-testid="tab-panel-billing" hidden>
+                <p>💳 Billing settings panel content.</p>
+              </div>
+            </div>
+            <div class="status-panel">
+              <span class="status-label">Active Tab:</span>
+              <span id="tabs-status" class="status-value pending" data-testid="tabs-status">profile</span>
+            </div>
+          </section>
+
+          <!-- Section 44 — Accordion -->
+          <section id="section-44" class="challenge-card" data-testid="section-44">
+            <div class="card-header">
+              <span class="section-number">44</span>
+              <h2>Accordion</h2>
+            </div>
+            <p class="card-desc">Practise expanding/collapsing accordion panels — multiple panels can be open at the same time.</p>
+            <div class="playground accordion-playground">
+              <div class="accordion-list" id="accordion-list" data-testid="accordion-list">
+                <div class="accordion-item" data-testid="accordion-item-1">
+                  <button class="accordion-header" id="accordion-header-1" aria-expanded="false" aria-controls="accordion-body-1" data-testid="accordion-header-1">
+                    <span>What locator strategies does Playwright support?</span>
+                    <span class="accordion-icon">+</span>
+                  </button>
+                  <div class="accordion-body" id="accordion-body-1" data-testid="accordion-body-1" hidden>
+                    <p>Role, text, label, placeholder, alt text, title, test id, and raw CSS/XPath.</p>
+                  </div>
+                </div>
+                <div class="accordion-item" data-testid="accordion-item-2">
+                  <button class="accordion-header" id="accordion-header-2" aria-expanded="false" aria-controls="accordion-body-2" data-testid="accordion-header-2">
+                    <span>What is auto-waiting?</span>
+                    <span class="accordion-icon">+</span>
+                  </button>
+                  <div class="accordion-body" id="accordion-body-2" data-testid="accordion-body-2" hidden>
+                    <p>Playwright automatically waits for an element to be actionable before interacting with it.</p>
+                  </div>
+                </div>
+                <div class="accordion-item" data-testid="accordion-item-3">
+                  <button class="accordion-header" id="accordion-header-3" aria-expanded="false" aria-controls="accordion-body-3" data-testid="accordion-header-3">
+                    <span>What's a fixture?</span>
+                    <span class="accordion-icon">+</span>
+                  </button>
+                  <div class="accordion-body" id="accordion-body-3" data-testid="accordion-body-3" hidden>
+                    <p>A reusable piece of setup/teardown logic injected into a test.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="status-panel">
+              <span class="status-label">Open Panels:</span>
+              <span id="accordion-status" class="status-value pending" data-testid="accordion-status">0 open</span>
+            </div>
+          </section>
+
+          <!-- Section 45 — Toggle / Switch -->
+          <section id="section-45" class="challenge-card" data-testid="section-45">
+            <div class="card-header">
+              <span class="section-number">45</span>
+              <h2>Toggle / Switch</h2>
+            </div>
+            <p class="card-desc">Practise a checkbox visually rendered as an iOS-style toggle switch — automate it the same way as a checkbox (`.check()`/`.click()`), not by clicking a raw slider pixel.</p>
+            <div class="playground toggle-playground">
+              <div class="toggle-row">
+                <label class="toggle-switch">
+                  <input type="checkbox" id="toggle-notifications" data-testid="toggle-notifications" aria-label="Enable notifications toggle">
+                  <span class="toggle-slider"></span>
+                </label>
+                <span>Enable Notifications</span>
+              </div>
+              <div class="toggle-row">
+                <label class="toggle-switch">
+                  <input type="checkbox" id="toggle-darkmode" checked data-testid="toggle-darkmode" aria-label="Dark mode toggle">
+                  <span class="toggle-slider"></span>
+                </label>
+                <span>Dark Mode (starts ON)</span>
+              </div>
+              <div class="toggle-row">
+                <label class="toggle-switch">
+                  <input type="checkbox" id="toggle-disabled" disabled data-testid="toggle-disabled" aria-label="Disabled toggle">
+                  <span class="toggle-slider"></span>
+                </label>
+                <span>Locked Setting (disabled)</span>
+              </div>
+            </div>
+            <div class="status-panel">
+              <span class="status-label">Notifications:</span>
+              <span id="toggle-status" class="status-value pending" data-testid="toggle-status">off</span>
+            </div>
+          </section>
+
+          <!-- Section 46 — Toast Notifications -->
+          <section id="section-46" class="challenge-card" data-testid="section-46">
+            <div class="card-header">
+              <span class="section-number">46</span>
+              <h2>Toast Notifications</h2>
+            </div>
+            <p class="card-desc">Practise waiting for a transient toast to appear and auto-dismiss after 3 seconds (or dismiss it manually) — an element that exists only briefly.</p>
+            <div class="playground toast-playground">
+              <div class="btn-group">
+                <button id="btn-toast-success" class="btn btn-primary" data-testid="btn-toast-success" aria-label="Show success toast">Show Success Toast</button>
+                <button id="btn-toast-error" class="btn btn-secondary" data-testid="btn-toast-error" aria-label="Show error toast">Show Error Toast</button>
+              </div>
+              <div class="toast-stack" id="toast-stack" data-testid="toast-stack" aria-live="polite"></div>
+            </div>
+            <div class="status-panel">
+              <span class="status-label">Toasts Shown:</span>
+              <span id="toast-status" class="status-value pending" data-testid="toast-status">0</span>
+            </div>
+          </section>
+
+          <!-- Section 47 — Dependent Dropdowns -->
+          <section id="section-47" class="challenge-card" data-testid="section-47">
+            <div class="card-header">
+              <span class="section-number">47</span>
+              <h2>Dependent Dropdowns</h2>
+            </div>
+            <p class="card-desc">Practise cascading selects: choosing a Country repopulates State, which repopulates City. Each downstream select stays disabled until its parent has a value.</p>
+            <div class="playground dependent-dropdown-playground">
+              <div class="dropdown-group">
+                <label for="dep-country">Country:</label>
+                <select id="dep-country" class="form-control select-control" data-testid="dep-country" aria-label="Country">
+                  <option value="">Select country...</option>
+                  <option value="US">United States</option>
+                  <option value="IN">India</option>
+                </select>
+              </div>
+              <div class="dropdown-group">
+                <label for="dep-state">State:</label>
+                <select id="dep-state" class="form-control select-control" data-testid="dep-state" aria-label="State" disabled>
+                  <option value="">Select country first...</option>
+                </select>
+              </div>
+              <div class="dropdown-group">
+                <label for="dep-city">City:</label>
+                <select id="dep-city" class="form-control select-control" data-testid="dep-city" aria-label="City" disabled>
+                  <option value="">Select state first...</option>
+                </select>
+              </div>
+            </div>
+            <div class="status-panel">
+              <span class="status-label">Selection:</span>
+              <span id="dep-dropdown-status" class="status-value pending" data-testid="dep-dropdown-status">none</span>
+            </div>
+          </section>
+
+          <!-- Section 48 — OTP / Verification Code Input -->
+          <section id="section-48" class="challenge-card" data-testid="section-48">
+            <div class="card-header">
+              <span class="section-number">48</span>
+              <h2>OTP / Verification Code Input</h2>
+            </div>
+            <p class="card-desc">Practise a 6-box OTP input: typing a digit auto-advances focus to the next box; Backspace on an empty box moves focus back. Correct demo code is <code>123456</code>.</p>
+            <div class="playground otp-playground">
+              <div class="otp-row" id="otp-row" data-testid="otp-row">
+                <input type="text" inputmode="numeric" maxlength="1" class="otp-box" data-otp-index="0" data-testid="otp-box-0" aria-label="OTP digit 1">
+                <input type="text" inputmode="numeric" maxlength="1" class="otp-box" data-otp-index="1" data-testid="otp-box-1" aria-label="OTP digit 2">
+                <input type="text" inputmode="numeric" maxlength="1" class="otp-box" data-otp-index="2" data-testid="otp-box-2" aria-label="OTP digit 3">
+                <input type="text" inputmode="numeric" maxlength="1" class="otp-box" data-otp-index="3" data-testid="otp-box-3" aria-label="OTP digit 4">
+                <input type="text" inputmode="numeric" maxlength="1" class="otp-box" data-otp-index="4" data-testid="otp-box-4" aria-label="OTP digit 5">
+                <input type="text" inputmode="numeric" maxlength="1" class="otp-box" data-otp-index="5" data-testid="otp-box-5" aria-label="OTP digit 6">
+              </div>
+              <button id="btn-otp-verify" class="btn btn-primary" data-testid="btn-otp-verify" style="margin-top:0.85rem;" aria-label="Verify OTP code">Verify Code</button>
+            </div>
+            <div class="status-panel">
+              <span class="status-label">Code Status:</span>
+              <span id="otp-status" class="status-value pending" data-testid="otp-status">Incomplete</span>
+            </div>
+          </section>
+
+          <!-- Section 49 — Rich Text Editor -->
+          <section id="section-49" class="challenge-card" data-testid="section-49">
+            <div class="card-header">
+              <span class="section-number">49</span>
+              <h2>Rich Text Editor</h2>
+            </div>
+            <p class="card-desc">Practise a <code>contenteditable</code>-based editor: select text, apply Bold/Italic/Underline formatting, and read back the resulting HTML — a different automation model than a plain input or textarea.</p>
+            <div class="playground rte-playground">
+              <div class="rte-toolbar" role="toolbar" aria-label="Text formatting toolbar">
+                <button type="button" class="btn btn-xs btn-outline rte-cmd-btn" data-command="bold" id="rte-btn-bold" data-testid="rte-btn-bold" aria-label="Bold"><strong>B</strong></button>
+                <button type="button" class="btn btn-xs btn-outline rte-cmd-btn" data-command="italic" id="rte-btn-italic" data-testid="rte-btn-italic" aria-label="Italic"><em>I</em></button>
+                <button type="button" class="btn btn-xs btn-outline rte-cmd-btn" data-command="underline" id="rte-btn-underline" data-testid="rte-btn-underline" aria-label="Underline"><u>U</u></button>
+                <button type="button" class="btn btn-xs btn-secondary" id="rte-btn-clear" data-testid="rte-btn-clear" aria-label="Clear editor content">Clear</button>
+              </div>
+              <div id="rte-editor" class="rte-editor" contenteditable="true" data-testid="rte-editor" aria-label="Rich text editor content area">Start typing here, then select text and click Bold/Italic/Underline...</div>
+            </div>
+            <div class="status-panel">
+              <span class="status-label">Character Count:</span>
+              <span id="rte-status" class="status-value pending" data-testid="rte-status">0 characters</span>
+            </div>
+          </section>
+
+          <!-- Section 50 — Tree View -->
+          <section id="section-50" class="challenge-card" data-testid="section-50">
+            <div class="card-header">
+              <span class="section-number">50</span>
+              <h2>Tree View</h2>
+            </div>
+            <p class="card-desc">Practise an interactive file-tree: expand/collapse folders, and check a parent node to cascade-select all its children.</p>
+            <div class="playground tree-view-playground">
+              <ul class="tree-view" id="tree-view" role="tree" data-testid="tree-view">
+                <li class="tree-node" data-testid="tree-node-src">
+                  <div class="tree-row">
+                    <button class="tree-toggle" id="tree-toggle-src" data-testid="tree-toggle-src" aria-expanded="true" aria-label="Toggle src folder">▾</button>
+                    <label class="control-label"><input type="checkbox" class="tree-checkbox" id="tree-check-src" data-testid="tree-check-src" aria-label="Select src folder"> 📁 src</label>
+                  </div>
+                  <ul class="tree-children" id="tree-children-src" data-testid="tree-children-src">
+                    <li class="tree-node" data-testid="tree-node-components">
+                      <div class="tree-row">
+                        <button class="tree-toggle" id="tree-toggle-components" data-testid="tree-toggle-components" aria-expanded="true" aria-label="Toggle components folder">▾</button>
+                        <label class="control-label"><input type="checkbox" class="tree-checkbox" id="tree-check-components" data-testid="tree-check-components" aria-label="Select components folder"> 📁 components</label>
+                      </div>
+                      <ul class="tree-children" id="tree-children-components" data-testid="tree-children-components">
+                        <li class="tree-node tree-leaf" data-testid="tree-node-button-tsx">
+                          <div class="tree-row">
+                            <span class="tree-toggle-spacer"></span>
+                            <label class="control-label"><input type="checkbox" class="tree-checkbox" id="tree-check-button" data-testid="tree-check-button" aria-label="Select Button.tsx"> 📄 Button.tsx</label>
+                          </div>
+                        </li>
+                        <li class="tree-node tree-leaf" data-testid="tree-node-modal-tsx">
+                          <div class="tree-row">
+                            <span class="tree-toggle-spacer"></span>
+                            <label class="control-label"><input type="checkbox" class="tree-checkbox" id="tree-check-modal" data-testid="tree-check-modal" aria-label="Select Modal.tsx"> 📄 Modal.tsx</label>
+                          </div>
+                        </li>
+                      </ul>
+                    </li>
+                    <li class="tree-node tree-leaf" data-testid="tree-node-main-ts">
+                      <div class="tree-row">
+                        <span class="tree-toggle-spacer"></span>
+                        <label class="control-label"><input type="checkbox" class="tree-checkbox" id="tree-check-main" data-testid="tree-check-main" aria-label="Select main.ts"> 📄 main.ts</label>
+                      </div>
+                    </li>
+                  </ul>
+                </li>
+                <li class="tree-node tree-leaf" data-testid="tree-node-package-json">
+                  <div class="tree-row">
+                    <span class="tree-toggle-spacer"></span>
+                    <label class="control-label"><input type="checkbox" class="tree-checkbox" id="tree-check-package" data-testid="tree-check-package" aria-label="Select package.json"> 📄 package.json</label>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="status-panel">
+              <span class="status-label">Selected Files:</span>
+              <span id="tree-status" class="status-value pending" data-testid="tree-status">0 selected</span>
+            </div>
+          </section>
+
+          <!-- Section 51 — Responsive Navigation -->
+          <section id="section-51" class="challenge-card" data-testid="section-51">
+            <div class="card-header">
+              <span class="section-number">51</span>
+              <h2>Responsive Navigation</h2>
+            </div>
+            <p class="card-desc">A self-contained nav bar that shows full links above a 640px container width, and collapses to a hamburger menu below it. Resize your browser (or use Playwright's <code>setViewportSize</code>) to see it switch.</p>
+            <div class="playground responsive-nav-playground">
+              <div class="mini-navbar" id="mini-navbar" data-testid="mini-navbar">
+                <span class="mini-navbar-brand">MiniApp</span>
+                <ul class="mini-navbar-links" id="mini-navbar-links" data-testid="mini-navbar-links">
+                  <li><a href="#section-51" data-testid="mini-nav-home">Home</a></li>
+                  <li><a href="#section-51" data-testid="mini-nav-products">Products</a></li>
+                  <li><a href="#section-51" data-testid="mini-nav-about">About</a></li>
+                  <li><a href="#section-51" data-testid="mini-nav-contact">Contact</a></li>
+                </ul>
+                <button class="mini-navbar-hamburger" id="mini-navbar-hamburger" data-testid="mini-navbar-hamburger" aria-label="Toggle navigation menu" aria-expanded="false">☰</button>
+              </div>
+              <div class="mini-navbar-mobile-menu" id="mini-navbar-mobile-menu" data-testid="mini-navbar-mobile-menu" hidden>
+                <a href="#section-51" data-testid="mini-nav-mobile-home">Home</a>
+                <a href="#section-51" data-testid="mini-nav-mobile-products">Products</a>
+                <a href="#section-51" data-testid="mini-nav-mobile-about">About</a>
+                <a href="#section-51" data-testid="mini-nav-mobile-contact">Contact</a>
+              </div>
+            </div>
+            <div class="status-panel">
+              <span class="status-label">Layout Mode:</span>
+              <span id="responsive-nav-status" class="status-value pending" data-testid="responsive-nav-status">desktop</span>
+            </div>
+          </section>
+
+          <!-- Section 52 — Popover -->
+          <section id="section-52" class="challenge-card" data-testid="section-52">
+            <div class="card-header">
+              <span class="section-number">52</span>
+              <h2>Popover</h2>
+            </div>
+            <p class="card-desc">Practise a click-triggered popover (unlike Section 15's hover-only tooltip): it stays open until you click its own close button, click outside it, or press Escape.</p>
+            <div class="playground popover-playground">
+              <div class="popover-wrapper">
+                <button id="popover-trigger" class="btn btn-outline" data-testid="popover-trigger" aria-haspopup="true" aria-expanded="false" aria-controls="popover-box" aria-label="Open info popover">ℹ️ Show Info Popover</button>
+                <div id="popover-box" class="popover-box" data-testid="popover-box" role="dialog" hidden>
+                  <div class="popover-header">
+                    <strong>Quick Info</strong>
+                    <button id="popover-close" class="modal-close-x" data-testid="popover-close" aria-label="Close popover">&times;</button>
+                  </div>
+                  <p>This popover stays open until dismissed — click outside, press Escape, or use the close button.</p>
+                </div>
+              </div>
+            </div>
+            <div class="status-panel">
+              <span class="status-label">Popover State:</span>
+              <span id="popover-status" class="status-value pending" data-testid="popover-status">closed</span>
             </div>
           </section>
 

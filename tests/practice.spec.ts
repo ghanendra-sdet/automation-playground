@@ -23,6 +23,7 @@ test.describe('Automation Practice Playground', () => {
     await page.getByTestId('form-name').fill('Playwright Tester');
     await page.getByTestId('form-email').fill('tester@playwright.dev');
     await page.getByTestId('form-password').fill('securePassword123');
+    await page.getByTestId('form-confirm-password').fill('securePassword123');
     await page.getByTestId('form-phone').fill('+1234567890');
     await page.getByTestId('form-bio').fill('This is a test bio for UI verification.');
 
