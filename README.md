@@ -28,6 +28,18 @@ specific UI pattern you're trying to learn.
 Built with **Vite + TypeScript**, includes a dark/light theme toggle, and ships with a real
 **Playwright test suite** you can read, run, and extend.
 
+## Preview
+
+<p align="center">
+  <img src="docs/assets/preview-basic-form.png" alt="Basic Form Elements section with inline validation, password strength meter, and automation checklist" width="800">
+</p>
+<p align="center">
+  <img src="docs/assets/preview-modals.png" alt="Modals section with the confirm/cancel delete dialog" width="800">
+</p>
+<p align="center">
+  <img src="docs/assets/preview-new-sections.png" alt="Tabs and Accordion sections, part of the newly added challenges" width="800">
+</p>
+
 ## Sections
 
 ```
