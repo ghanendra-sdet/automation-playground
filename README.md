@@ -31,13 +31,16 @@ Built with **Vite + TypeScript**, includes a dark/light theme toggle, and ships 
 ## Preview
 
 <p align="center">
-  <img src="docs/assets/preview-basic-form.png" alt="Basic Form Elements section with inline validation, password strength meter, and automation checklist" width="800">
+  <img src="docs/assets/preview-basic-form.png" alt="Basic Form Elements section with inline validation, password strength meter, and automation checklist" width="800"><br>
+  <sub>Section 01 — Basic Form Elements, with inline validation and a password-strength meter</sub>
 </p>
 <p align="center">
-  <img src="docs/assets/preview-modals.png" alt="Modals section with the confirm/cancel delete dialog" width="800">
+  <img src="docs/assets/preview-modals.png" alt="Modals section with the confirm/cancel delete dialog" width="800"><br>
+  <sub>Section 10 — Modals, with the new confirm/cancel delete dialog</sub>
 </p>
 <p align="center">
-  <img src="docs/assets/preview-new-sections.png" alt="Tabs and Accordion sections, part of the newly added challenges" width="800">
+  <img src="docs/assets/preview-new-sections.png" alt="Tabs and Accordion sections, part of the newly added challenges" width="800"><br>
+  <sub>Sections 43-44 — Tabs and Accordion, two of the ten newly added sections</sub>
 </p>
 
 ## Sections
@@ -74,8 +77,12 @@ disables past/out-of-range dates and pairs with a time input.
 
 ```bash
 npm install
-npm run dev        # starts the dev server (Vite prints the local URL)
+npm run dev        # starts the dev server on http://localhost:5180
 ```
+
+> Pinned to port `5180` (not Vite's default `5173`) so it can't collide with another project's
+> dev server already running on your machine — if you change it, update `playwright.config.ts`'s
+> `baseURL`/`webServer.url` to match.
 
 ## Running the Tests
 
@@ -86,10 +93,7 @@ npx playwright show-report       # view the HTML report after a run
 ```
 
 > [!NOTE]
-> The included test suite (`tests/practice.spec.ts`) currently covers a subset of the 52 sections
-> as worked examples — Basic Form Elements, Button Interactions, and others. It's meant as a
-> starting point to extend, not a claim that every section is pre-tested. Contributions adding
-> coverage for more sections are welcome.
+> `tests/practice.spec.ts` covers a subset of the 52 sections as worked examples, not all of them — contributions extending coverage are welcome.
 
 ## Tech Stack
 
