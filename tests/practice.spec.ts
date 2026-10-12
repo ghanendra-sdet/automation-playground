@@ -2,17 +2,21 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Automation Practice Playground', () => {
   test.beforeEach(async ({ page }) => {
-    // Listen for browser console logs and uncaught exceptions
-    page.on('console', msg => {
-      console.log(`[BROWSER CONSOLE] ${msg.type()}: ${msg.text()}`);
-    });
+    // Uncaught exceptions always matter, pass or fail — keep this unconditional.
     page.on('pageerror', err => {
       console.error(`[BROWSER UNCAUGHT ERROR] ${err.stack || err.message}`);
     });
 
-    // Listen for network requests and responses
-    page.on('request', req => console.log(`>> REQ: [${req.method()}] ${req.url()}`));
-    page.on('response', res => console.log(`<< RES: [${res.status()}] ${res.url()}`));
+    // Verbose console/network tracing is opt-in (DEBUG_NETWORK=1). It was previously
+    // unconditional, which printed every console message and every request/response for
+    // every passing test — pure noise that buried real signal. The HTML report's trace
+    // viewer (`trace: 'on-first-retry'`) already captures this per-test when something
+    // actually goes wrong.
+    if (process.env.DEBUG_NETWORK) {
+      page.on('console', msg => console.log(`[BROWSER CONSOLE] ${msg.type()}: ${msg.text()}`));
+      page.on('request', req => console.log(`>> REQ: [${req.method()}] ${req.url()}`));
+      page.on('response', res => console.log(`<< RES: [${res.status()}] ${res.url()}`));
+    }
 
     // Navigate to the local practice app homepage
     await page.goto('/');
@@ -95,6 +99,32 @@ test.describe('Automation Practice Playground', () => {
     const shadowStatus = page.locator('#shadow-container').locator('#shadow-status');
     await expect(shadowStatus).toBeVisible();
     await expect(shadowStatus).toHaveText(/Shadow DOM Key Accepted: "SECRET_SHADOW_KEY"/);
+  });
+
+  test('Challenge 21: Authentication Simulation — login, session, and logout', async ({ page }) => {
+    // Positive path: valid demo credentials log in, persist a mock session token,
+    // and reveal the protected dashboard box.
+    await page.getByTestId('auth-username').fill('admin');
+    await page.getByTestId('auth-password').fill('admin123');
+    await page.getByTestId('btn-login').click();
+
+    await expect(page.getByTestId('auth-status')).toHaveText('Logged In');
+    await expect(page.getByTestId('auth-dashboard')).toBeVisible();
+    await expect(page.getByTestId('session-token')).toHaveText('AUTH_SUCCESS_TOKEN_998877');
+
+    // Logout clears the session and returns to the login box.
+    await page.getByTestId('btn-logout').click();
+    await expect(page.getByTestId('auth-status')).toHaveText('Logged Out');
+    await expect(page.getByTestId('auth-dashboard')).toBeHidden();
+  });
+
+  test('Challenge 21: Authentication Simulation — invalid credentials are rejected', async ({ page }) => {
+    await page.getByTestId('auth-username').fill('admin');
+    await page.getByTestId('auth-password').fill('wrong-password');
+    await page.getByTestId('btn-login').click();
+
+    await expect(page.getByTestId('auth-status')).toHaveText('Invalid Credentials');
+    await expect(page.getByTestId('auth-dashboard')).toBeHidden();
   });
 
   test('Challenge 25: Flaky Operations (Automatic Retries)', async ({ page }) => {
