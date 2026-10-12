@@ -1,61 +1,62 @@
 # automation-playground — Resume State
 
-**Last updated:** 2026-09-09 (Claude) — Full audit + enhancement pass complete, verified, uncommitted.
+**Last updated:** 2026-10-12 (Claude) — Evidence-based framework audit + optimization pass
+complete, verified, uncommitted.
 
 ## What this repo is
 Single-page Vite + TypeScript UI automation practice playground (no framework). All markup lives
 in `index.html`; all JS logic in `src/main.ts` as sequential `// Challenge NN:` blocks; all styles
 in `src/style.css` as `/* Section NN: Name */` blocks. GitHub Pages deploy, base path
-`/automation-playground/`. Dev server pinned to **port 5180** (not Vite's default 5173 — that port
-is frequently squatted by an unrelated project's dev server on this machine; see "Known gotcha"
-below).
+`/automation-playground/`. Dev server pinned to **port 5180** (not Vite's default 5173). No
+backend, no real API, no secrets — confirmed by grep, documented in `docs/FRAMEWORK_AUDIT.md`.
 
 ## Current state (uncommitted, awaiting user review — do not push without explicit "push" instruction)
-Went from 41→**52 sections**. Full audit done first (per user's explicit "don't code yet" request),
-plan confirmed, then implemented:
-- **10 new sections (43-52):** Tabs, Accordion, Toggle/Switch, Toast Notifications, Dependent
-  Dropdowns, OTP Input, Rich Text Editor, Tree View, Responsive Nav practice widget, Popover.
-- **4 deepened, not duplicated:** Section 1 (Basic Form — inline validation, password strength
-  meter, confirm-password, readonly/disabled/conditional fields, submit loading state), Section 8
-  (Table — bulk select w/ indeterminate, inline cell edit, numbered pagination, skeleton-loading
-  reload), Section 10 (Modals — added a real confirm/cancel destructive-action dialog + Escape-key
-  support), Section 28 (Date Picker — disabled past/>60-day dates, added a time input).
-- Every new/enhanced section wired into the site's existing `challengeSteps` checklist-injection
-  system and `resetSection()` per-card reset system — both are site-wide conventions, not something
-  I invented.
-- README updated (badge count, section table, enhancement note).
+User pasted a large generic "senior SDET framework audit" prompt (13 phases) assuming this repo
+has business modules — Login/Auth, Dashboard, Merchants, Payout, Connected Banking, Collection,
+Reports, etc. It doesn't; this is a 52-section open-source practice sandbox, not a fintech app.
+Those product names match *other* repos in the account instead (fintech-payout-engine,
+fintech-connected-banking-platform, bbps-bill-payment-platform, reseller-management-platform,
+yobo, ai-dispute-resolution-engine). Flagged this clearly in `docs/FRAMEWORK_AUDIT.md` §0, then
+ran the real, scoped-down version of the audit against what's actually here rather than
+inventing fictional module coverage.
 
-**Explicitly not added** (considered, judged low incremental value given how much already existed):
-carousel, star rating, file-manager UI, dedicated error pages (404/403/500), sticky-UI as its own
-section, nested hover-submenu.
+**Implemented** (all real, evidence-based, validated):
+- Removed `playwright.config.ts`'s `workers: 1` cap, which contradicted `fullyParallel: true` —
+  measured 66s → 18-25s (3.7x) with identical pass results, no shared-state hazard (no backend).
+- Gated the previously-unconditional console/network logging in `tests/practice.spec.ts`'s
+  `beforeEach` behind `DEBUG_NETWORK=1` — it was burying real signal (`pageerror`) in noise on
+  every passing test. `pageerror` itself stays unconditional.
+- Added 2 new tests for Section 21 (Authentication Simulation — login/session/logout,
+  invalid-credentials rejection), which had zero prior coverage despite being the one feature
+  that models auth/session state (`src/main.ts:1320-1368`).
+- Added a JUnit reporter (`test-results/junit.xml`) alongside the existing HTML reporter —
+  verified non-empty, `failures="0"`, after a real run.
+- Added Playwright browser caching to `.github/workflows/tests.yml` (standard cache-hit/miss
+  pattern) — not executable locally, unverified until pushed; flagged as a limitation.
+
+**Explicitly NOT done** (recommended in the audit doc, not implemented, with reasoning):
+ESLint/Prettier (new dependency, user's call), smoke/sanity/regression test tagging (premature at
+8 tests), splitting `main.ts`/`index.html`/`style.css` into modules or a POM layer (prior
+documented intentional decision for this app's shape — would add indirection, not reduce
+duplication), any business-module coverage (doesn't exist here).
 
 ## Verification done
-- `npm run build` (tsc + vite build): clean.
-- Custom 44-assertion Playwright functional pass across all new/enhanced sections: 44/44 (2 initial
-  "failures" were test-script math errors on my part, not app bugs — see chat transcript).
-- Pre-existing `tests/practice.spec.ts` suite (3 browsers): 17/18 passed after two fixes (see
-  below); the 1 remaining failure is Section 25's intentional 50/50 flaky test on webkit — expected,
-  documented behavior, not a regression.
+- `npm run build` (tsc + vite build): clean before and after, ~110-180ms.
+- Full Playwright suite, 3 browsers, run multiple times across the audit:
+  - Before: 18 tests, workers:1, 66.0s, 16 passed + 2 flaky (Section 25 only) = 18/18, 0 failed.
+  - After: 24 tests, auto-workers, 19-25s (varies with Section 25's RNG), consistently 0 failed,
+    0 skipped, 1-2 flaky (always and only Section 25, by design).
+- `test-results/junit.xml` confirmed generated and well-formed after a real (non-overridden
+  reporter) run.
 
-## Known gotcha — port 5173 squatting (fixed here, worth knowing elsewhere)
-An unrelated project's Vite dev server (`.../Minimal API Test/fetchly`, `--port 5173 --strictPort`)
-kept claiming port 5173 during this session, and `reuseExistingServer: true` silently made
-Playwright test the *wrong app* (zero relation to automation-playground) rather than erroring —
-this exact same failure mode is independently documented in `api-lab/plan.md` too, so it's a
-recurring environmental issue on this machine, not a one-off. Fixed **for this repo** by pinning
-`vite.config.js`'s `server.port` to `5180` (`strictPort: true`) and updating
-`playwright.config.ts`'s `baseURL`/`webServer.url` to match — this repo can no longer collide with
-that stray server regardless of what else is running.
-
-## Regression fixes made to the pre-existing test suite
-The original `tests/practice.spec.ts` broke against the enhanced Section 1 form for two real
-reasons, both fixed:
-1. Phone pattern was initially too strict (`^[0-9]{10}$`) — rejected the test's own
-   `+1234567890` input. Loosened to `^\+?[0-9]{10,15}$` (also just more realistic).
-2. The test never filled the new required "Confirm Password" field. Updated the test to fill it.
+## Files changed this pass
+`playwright.config.ts`, `tests/practice.spec.ts`, `.github/workflows/tests.yml` (all modified, not
+committed) + 3 new docs: `docs/FRAMEWORK_AUDIT.md`, `docs/OPTIMIZATION_CHANGELOG.md`,
+`docs/FRAMEWORK_GUIDE.md`.
 
 ## Next steps if resuming
-- Nothing is committed or pushed — user explicitly said they'll push manually.
-- If asked to continue enhancing: the "not added" list above is the natural backlog.
-- If the port-5173 conflict resurfaces in *other* repos being tested locally, the fix pattern here
-  (pin a dedicated port in both vite config and playwright config) is the one to reach for.
+- Nothing is committed or pushed — user explicitly said they'll push manually (account-wide rule).
+- If asked to continue: L1/L2 in `docs/FRAMEWORK_AUDIT.md` (lint tooling, test tagging) are the
+  natural backlog, both deliberately deferred rather than done.
+- If the user says the business-module audit was meant for a different repo, the candidates by
+  product-name match are listed in `docs/FRAMEWORK_AUDIT.md` §0.
